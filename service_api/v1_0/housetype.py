@@ -56,7 +56,7 @@ def delete_housetype(ty_id):
         return jsonify({"code": 0, "message": "参数错误"})
     try:
 
-        db_session.query(HouseType).filter(HouseType.ty_id == ht_id).delete()
+        db_session.query(HouseType).filter(HouseType.ty_id == ty_id).delete()
         db_session.commit()
         return jsonify({"code": 1, "message": "类型删除成功"})
 

@@ -22,6 +22,55 @@ def insert_houseresources():
     ho_resources.hs_address = request.get_json().get("hs_address")
     ho_resources.hs_images = request.get_json().get("hs_images")
     ho_resources.hs_hitvalume = 0
-    db_session.add(ho_resources)
-    db_session.commit()
-    return jsonify({"code":1,"message":"房源添加成功"})
+    try:
+        db_session.add(ho_resources)
+        db_session.commit()
+        return jsonify({"code":1,"message":"房源添加成功"})
+    except exc.IntegrityError:
+        return jsonify({"code":0,"message":"房源添加失败"})
+
+@api.route("/api/v1.0/hs_edit",methods=["POST"])
+def update_houseresources(hs_id):
+    hs_id = request.get_json().get("hs_id")
+    if not hs_id:
+        return  jsonify({"code":0,"message":"房源不存在"})
+    ho_id = request.get_json().get("ho_id")
+    if not ho_id:
+        return jsonify({"code" : 0,"message":"参数错误"})
+    ty_id = request.get_json().get("ty_id")
+    if not ty_id:
+        return jsonify({"code" : 0,"message":"参数错误"})
+    hs_intro = request.get_json().get("hs_intro")
+    hs_province = request.get_json().get("hs_province")
+    hs_city = request.get_json().get("hs_city")
+    hs_country = request.get_json().get("hs_country")
+    hs_address = request.get_json().get("hs_address")
+    hs_images = request.get_json().get("hs_images")
+    hs_hitvalume = request.get_json().get("hs_hitvalume")
+    try:
+        db_session.query(HouseResources).filter(HouseResources.hs_id == hs_id).update({
+            "hs_intro" : hs_intro,
+            "hs_province" : hs_province,
+            "hs_city" : hs_city,
+            "hs_country" : hs_country,
+            "hs_address" : hs_address,
+            "hs_images" : hs_images,
+            "hs_hitvalume" : hs_hitvalume
+        })
+        db_session.commit()
+        return jsonify({"code" : 1, "message" : "更新成功"})
+    except exc.IntegrityError:
+        db_session.rollback()
+    return jsonify({"code":0,"message":"更新失败"})
+
+@api.route("/api/v1.0/hs_delete",methods = ["POST"])
+def delete_houseresources(hs_id):
+    hs_id = request.get_json().get("hs_id")
+    if not hs_id:
+        return jsonify({"code":0,"message":"参数错误"})
+    try:
+        db_session.query(HouseResources).filter(HouseResources.hs_id == hs_id).delete()
+        db_session.commit()
+        return jsonify({"code":1,"message":"删除成功"})
+    except exc.IntegrityError:
+        return jsonify({"code": 0, "message": "删除失败"})
