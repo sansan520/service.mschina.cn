@@ -16,57 +16,58 @@ from . import api
 # redis_store = redis.StrictRedis(host=Conf.REDIS_HOST, port=Conf.REDIS_PORT, db=Conf.REDIS_DB, password=Conf.REDIS_PASSWORD)
 #在此之前设置config
 
-def login_check(func):
-    @wraps(func)
-    def decorator(*args, **kwargs):
-        token = request.headers.get("token")
-        if not token:
-            return jsonify({"code": 0, "message": "token错误,需要验证"})
-        ho_account = current_app.redis.get("token:%s" % token)
-        tokenfrmredis = current_app.redis.hget('user:%s' % ho_account.decode('utf8'), 'token')
-
-        if not ho_account or token.encode(encoding="utf8") != tokenfrmredis:
-            return jsonify({'code': 2, 'message': '验证信息错误'})
-        return func(*args, **kwargs)
-
-    return decorator
-
-@api.before_request
-def before_request():
-    token = request.headers.get("token")
-    if token:
-        account = current_app.redis.get("token:%s" % token)
-        # print(account)
-        if not account:
-            account = account.encode("utf8")
-        g.current_user = db_session.query(HouseOwner).filter(HouseOwner.ho_account == account).one()
-        g.token = token
-    return
-
-
-
-# @app.route('/api/v1.0/horegister', methods=['POST'])
-# def house_owner_register():
-#     if not request.json or not 'honame' in request.json:
-#         return jsonify({'code': 0,'message':'请填写您的真实姓名'})
-#     if not request.json or not 'hoaccount' in request.json:
-#         return jsonify({'code': 0, 'message': '请填写您的账号'})
-#     if not request.json or not 'homobile' in request.json:
-#         return jsonify({'code': 0, 'message': '请填写您的手机号'})
-#     if not request.json or not 'honicard' in request.json:
-#         return jsonify({'code': 0, 'message': '请提交您的身份证'})
+# def login_check(func):
+#     @wraps(func)
+#     def decorator(*args, **kwargs):
+#         token = request.headers.get("token")
+#         if not token:
+#             return jsonify({"code": 0, "message": "token错误,需要验证"})
+#         ho_account = current_app.redis.get("token:%s" % token)
+#         tokenfrmredis = current_app.redis.hget('user:%s' % ho_account.decode('utf8'), 'token')
 #
-#     task={
-#         'honame':request.json['honame'],
-#         'hoaccount': request.json['hoaccount'],
-#         'hotel': request.json['hotel'],
-#         'homobile': request.json['homobile'],
-#         'hoemail': request.json['hoemail'],
-#         'honicard': request.json['honicard'],
-#         'hoimage': request.json['hoimage']
-#     }
+#         if not ho_account or token.encode(encoding="utf8") != tokenfrmredis:
+#             return jsonify({'code': 2, 'message': '验证信息错误'})
+#         return func(*args, **kwargs)
 #
-#     return jsonify({'code': 1, 'message': '注册成功', "ho_owner": task})
+#     return decorator
+#
+# @api.before_request
+# def before_request():
+#     token = request.headers.get("token")
+#     if token:
+#         account = current_app.redis.get("token:%s" % token)
+#         # print(account)
+#         if not account:
+#             account = account.encode("utf8")
+#         g.current_user = db_session.query(HouseOwner).filter(HouseOwner.ho_account == account).one()
+#         g.token = token
+#     return
+
+@api.route("/api/v1.0/ho_register",methods = ["POST"])
+def ho_register():
+    # house_owner = {
+    #     "ho_name": request.get_json().get("ho_name"),
+    #     "ho_account": request.get_json().get("ho_account"),
+    #     "ho_password": request.get_json().get("ho_password"),
+    #     "ho_tel": request.get_json().get("ho_tel"),
+    #     "ho_mobile": request.get_json().get("ho_mobile"),
+    #     "ho_nicard": request.get_json().get("ho_nicard"),
+    #     "ho_image": request.get_json().get("ho_image"),
+    #     "ho_email": request.get_json().get("ho_email")
+    # }
+    house_owner = HouseOwner()
+    house_owner.ho_account = request.get_json().get("ho_account")
+    house_owner.ho_name = request.get_json().get("ho_name")
+    house_owner.ho_password = request.get_json().get("ho_password")
+    house_owner.ho_tel = request.get_json().get("ho_tel")
+    house_owner.ho_mobile = request.get_json().get("ho_mobile")
+    house_owner.ho_nicard = request.get_json().get("ho_nicard")
+    house_owner.ho_images = request.get_json().get("ho_image")
+    house_owner.ho_email = request.get_json().get("ho_email")
+    db_session.add(house_owner)
+    db_session.commit()
+    return jsonify({"code": 1, "message": "恭喜您注册成功"})
+
 
 @api.route("/api/v1.0/ho_register",methods = ["POST"])
 def ho_register():
@@ -118,7 +119,7 @@ def house_owner_login():
     return jsonify({'code': 1, 'message': '成功登录', 'acount': ho_account, 'token': token})
 
 @api.route("/api/v1.0/get_ho_by_token")
-@login_check
+# @login_check
 def get_house_owner():
     current_user = g.current_user
     # 通过redis中取出的账号查找mysql 数据库,返回该账号其他资料
@@ -130,7 +131,7 @@ def get_house_owner():
     return jsonify({'code': 1, 'ho_id': entity.ho_id, 'ho_name': entity.ho_name, 'ho_email': entity.ho_email, 'message': '操作成功', 'token': g.token})
 
 @api.route("/api/v1.0/logout")
-@login_check
+# @login_check
 def logout():
 
     current_user = g.current_user
