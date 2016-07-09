@@ -3,7 +3,6 @@ import hashlib
 import time
 from functools import wraps
 from flask import jsonify, request, g, current_app
-
 from service_api.model import HouseOwner, db_session
 from . import api
 
