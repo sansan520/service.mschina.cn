@@ -29,7 +29,7 @@ def insert_houseresources():
     except exc.IntegrityError:
         return jsonify({"code":0,"message":"房源添加失败"})
 
-@api.route("/api/v1.0/hs_edit",methods=["POST"])
+@api.route("/api/v1.0/hs_edit/<int:hs_id>",methods=["PUT"])
 def update_houseresources(hs_id):
     hs_id = request.get_json().get("hs_id")
     if not hs_id:
@@ -49,6 +49,7 @@ def update_houseresources(hs_id):
     hs_hitvalume = request.get_json().get("hs_hitvalume")
     try:
         db_session.query(HouseResources).filter(HouseResources.hs_id == hs_id).update({
+            "ty_id":ty_id,
             "hs_intro" : hs_intro,
             "hs_province" : hs_province,
             "hs_city" : hs_city,
@@ -63,9 +64,9 @@ def update_houseresources(hs_id):
         db_session.rollback()
     return jsonify({"code":0,"message":"更新失败"})
 
-@api.route("/api/v1.0/hs_delete",methods = ["POST"])
+@api.route("/api/v1.0/hs_delete/<int:hs_id>",methods = ["DELETE"])
 def delete_houseresources(hs_id):
-    hs_id = request.get_json().get("hs_id")
+
     if not hs_id:
         return jsonify({"code":0,"message":"参数错误"})
     try:
@@ -73,4 +74,5 @@ def delete_houseresources(hs_id):
         db_session.commit()
         return jsonify({"code":1,"message":"删除成功"})
     except exc.IntegrityError:
+        db_session.rollback()
         return jsonify({"code": 0, "message": "删除失败"})
