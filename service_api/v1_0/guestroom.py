@@ -96,7 +96,7 @@ def delete_guestroom(gt_id):
 
 # 根据房源类型,查询所有客房列表,返回JSON
 @api.route("/api/v1.0/get_guestroom_by_hsId/<int:hs_id>", methods=["GET"])
-def get_guestroom_by_hsid(hs_id):
+def get_guestroom_by_hsId(hs_id):
     if not hs_id:
         return jsonify({"code": 0, "message": "参数错误"})
 
@@ -106,7 +106,7 @@ def get_guestroom_by_hsid(hs_id):
 
 # 根据房间类型,查询所有客房列表,返回JSON
 @api.route("/api/v1.0/get_guestroom_by_rtId/<int:rt_id>", methods=["GET"])
-def get_guestroom_by_hsid(rt_id):
+def get_guestroom_by_rtId(rt_id):
     if not hsrt_id_id:
         return jsonify({"code": 0, "message": "参数错误"})
 
