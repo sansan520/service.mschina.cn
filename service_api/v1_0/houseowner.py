@@ -70,16 +70,15 @@ def before_request():
 
 @api.route("/api/v1.0/ho_register",methods = ["POST"])
 def ho_register():
-    house_owner = {
-        "ho_name":request.get_json().get("ho_name"),
-        "ho_account":request.get_json().get("ho_account"),
-        "ho_password":request.get_json().get("ho_password"),
-        "ho_tel":request.get_json().get("ho_tel"),
-        "ho_mobile":request.get_json().get("ho_mobile"),
-        "ho_nicard":request.get_json().get("ho_nicard"),
-        "ho_image":request.get_json().get("ho_image"),
-        "ho_email":request.get_json().get("ho_email")
-    }
+    house_owner = HouseOwner()
+    house_owner.ho_name = request.get_json().get("ho_name")
+    house_owner.ho_account = request.get_json().get("ho_account")
+    house_owner.ho_password = request.get_json().get("ho_password")
+    house_owner.ho_tel = request.get_json().get("ho_tel")
+    house_owner.ho_mobile = request.get_json().get("ho_mobile")
+    house_owner.ho_nicard = request.get_json().get("ho_nicard")
+    house_owner.ho_image = request.get_json().get("ho_image")
+    house_owner.ho_email = request.get_json().get("ho_email")
     db_session.add(house_owner)
     db_session.commit()
     return jsonify({"code":1,"message":"恭喜您注册成功"})
