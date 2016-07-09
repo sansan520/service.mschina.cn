@@ -93,6 +93,15 @@ class GuestRoom(Base):
     gt_price = Column('gt_price', DECIMAL(10, 2))
     gt_describe = Column('gt_describe', String(500))
 
+    def to_json(self):
+        return {
+            'gt_id': self.gt_id,
+            'hs_id': self.hs_id,
+            'rt_id': self.rt_id,
+            'gt_price': self.gt_price,
+            'gt_describe': self.gt_describe
+        }
+
 if __name__ == '__main__':
     Base.metadata.create_all(engine)
 
