@@ -11,4 +11,5 @@ from service_api.v1_0 import guestroom
 from service_api.v1_0 import houseresources
 from service_api.v1_0 import roomtype
 
+
 from service_api.v1_0 import test

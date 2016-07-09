@@ -21,7 +21,7 @@ class DevelopmentConfig(object):
     REDIS_DB = 0
     REDIS_PASSWORD = ''
 
-    MYSQL_INFO = "mysql+pymysql://root:123@127.0.0.1:3306/mschina?charset=utf8"
+    MYSQL_INFO = "mysql+pymysql://root:123456@127.0.0.1:3306/mschina?charset=utf8"
     #SQLALCHEMY_TRACK_MODIFICATIONS = True
 
 Conf = DevelopmentConfig

@@ -46,13 +46,29 @@ from . import api
 
 @api.route("/api/v1.0/ho_register", methods=["POST"])
 def ho_register():
+    ho_name = request.get_json().get("ho_name")
+    if not ho_name:
+        return jsonify({"code":0,"message":"姓名不能为空"})
+    ho_account = request.get_json().get("ho_account")
+    if not ho_account:
+        return jsonify({"code":0,"message":"账号不能为空"})
+    ho_password = request.get_json().get("ho_password")
+    if not ho_password:
+        return jsonify({"code": 0, "message": "密码不能为空"})
+    ho_mobile = request.get_json().get("ho_mobile")
+    if not ho_mobile:
+        return jsonify({"code": 0, "message": "手机号不能为空"})
+    ho_nicard = request.get_json().get("ho_nicard")
+    if not ho_nicard:
+        return jsonify({"code": 0, "message": "证件照不能为空"})
+
     house_owner = HouseOwner()
-    house_owner.ho_name = request.get_json().get("ho_name")
-    house_owner.ho_account = request.get_json().get("ho_account")
-    house_owner.ho_password = request.get_json().get("ho_password")
+    house_owner.ho_name = ho_name
+    house_owner.ho_account = ho_account
+    house_owner.ho_password = ho_password
     house_owner.ho_tel = request.get_json().get("ho_tel")
-    house_owner.ho_mobile = request.get_json().get("ho_mobile")
-    house_owner.ho_nicard = request.get_json().get("ho_nicard")
+    house_owner.ho_mobile = ho_mobile
+    house_owner.ho_nicard = ho_nicard
     house_owner.ho_image = request.get_json().get("ho_image")
     house_owner.ho_email = request.get_json().get("ho_email")
 

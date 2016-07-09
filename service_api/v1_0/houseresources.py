@@ -4,7 +4,6 @@ from service_api.model import db_session,HouseResources,HouseType,HouseOwner
 from . import api
 @api.route("/api/v1.0/hs_insert",methods = ["POST"])
 def insert_houseresources():
-
     ho_resources = HouseResources()
     ho_id =request.get_json().get("ho_id")
     if not ho_id:
