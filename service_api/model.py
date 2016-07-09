@@ -49,6 +49,15 @@ class HouseType(Base):
     ty_name = Column('ty_name', String(45), nullable=False)
     ty_valume =Column('ty_valume', Integer, default=0)
 
+
+    def to_json(self):
+        house_type = {
+            'ty_id': self.ty_id,
+            'ty_name': self.ty_name,
+            'ty_valume': self.ty_valume
+        }
+        return house_type
+
 # 房源表
 class HouseResources(Base):
 
