@@ -80,8 +80,8 @@ def ho_register():
 @api.route("/api/v1.0/ho_login", methods=["POST"])
 def house_owner_login():
 
-    ho_account = request.get_json().get("ho_account")
-    ho_password = request.get_json().get("ho_password")
+    ho_account = request.json["ho_account"]
+    ho_password = request.json["ho_password"]
 
     houseowner = db_session.query(HouseOwner).filter(HouseOwner.ho_account == ho_account).first()
     if not houseowner:
@@ -108,7 +108,7 @@ def house_owner_login():
     # pipeline.expire("token:%s" % token, 3600*5)
     # pipeline.execute()
 
-    return jsonify({'code': 1, 'message': '成功登录', 'acount': ho_account, 'token': token})
+    return jsonify({'code': 1, 'message': '成功登录', 'acount': ho_account})
 
 @api.route("/api/v1.0/get_ho_by_token")
 # @login_check
