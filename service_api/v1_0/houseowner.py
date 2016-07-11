@@ -121,11 +121,13 @@ def get_house_owner():
 
     #return json.dumps(entity.to_json(), ensure_ascii=False)
     return jsonify({'code': 1, 'ho_id': entity.ho_id, 'ho_name': entity.ho_name, 'ho_email': entity.ho_email, 'message': '操作成功', 'token': g.token})
+@api.route("/api/v1.0/get_ho_by_mobile/<string:ho_mobile>",methods=["GET"])
 def getbymobile():
     current_user = g.current_user
     entity = db_session.query(HouseOwner).filter(HouseOwner.ho_mobile == current_user.ho_mobile).one()
     db_session.close()
     return jsonify({'code': 1, 'ho_id': entity.ho_id, 'ho_name': entity.ho_name, 'ho_email': entity.ho_email, 'message': '操作成功','token': g.token})
+@api.route("/api/v1.0/get_ho_by_email/<string:ho_email>",methods = ["GET"])
 def getbyemail():
     current_user = g.current_user
     entity = db_session.query(HouseOwner).filter(HouseOwner.ho_email == current_user.ho_email).one()

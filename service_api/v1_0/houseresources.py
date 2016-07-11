@@ -63,6 +63,26 @@ def update_houseresources(hs_id):
     except exc.IntegrityError:
         db_session.rollback()
     return jsonify({"code":0,"message":"更新失败"})
+#查询用户名下的房源
+@api.route("/api/v1.0/get_by_ho_id/<int:ho_id>",methods=['GET'])
+def get_by_ho_id(ho_id):
+    if not ho_id:
+        return jsonify({"code":0,"message":"用户不存在"})
+    try:
+        db_session.query(HouseOwner.ho_id,HouseResources).join(HouseOwner,HouseResources,HouseOwner.ho_id == HouseResources.ho_id).all()
+    except exc.IntegrityError:
+        return jsonify({"code":0,"message":"参数错误"})
+#根据点击量更新用户的房源类型
+@api.route("api/v1.0/update_ty_id",methods=["PUT"])
+def update_ty_id(ty_id):
+    if not ty_id:
+        return jsonify({"code":0,"message":"房源类型不存在"})
+    try:
+        db_session.update(HouseResources.ty_id).query(HouseType.ty_id).filter(HouseResources.hs_hitvalume == HouseType.ty_valume).first()
+        db_session.commit()
+        return jsonify({"code": 1, "message": "房源类型更新成功"})
+    except exc.IntegrityError:
+        return jsonify({"code":0,"message":"房源类型更新失败"})
 
 @api.route("/api/v1.0/hs_delete/<int:hs_id>",methods = ["DELETE"])
 def delete_houseresources(hs_id):
