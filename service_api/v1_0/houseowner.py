@@ -4,6 +4,7 @@ import time
 from functools import wraps
 from flask import jsonify, request, g, current_app
 from service_api.model import HouseOwner, db_session
+from sqlalchemy import exc
 from . import api
 
 #redis 需要安装python支持库=>sudo pip install redis
@@ -57,6 +58,9 @@ def ho_register():
     ho_mobile = request.get_json().get("ho_mobile")
     if not ho_mobile:
         return jsonify({"code": 0, "message": "手机号不能为空"})
+    ho_email = request.get_json().get("ho_email")
+    if not ho_email:
+        return jsonify({"code":0,"message":"邮箱不能为空"})
     ho_nicard = request.get_json().get("ho_nicard")
     if not ho_nicard:
         return jsonify({"code": 0, "message": "证件照不能为空"})
@@ -70,11 +74,13 @@ def ho_register():
     house_owner.ho_nicard = ho_nicard
     house_owner.ho_image = request.get_json().get("ho_image")
     house_owner.ho_email = request.get_json().get("ho_email")
-
-    db_session.add(house_owner)
-    db_session.commit()
-
-    return jsonify({"code":1,"message":"恭喜您注册成功"})
+    try:
+        db_session.add(house_owner)
+        db_session.commit()
+        return jsonify({"code":1,"message":"恭喜您注册成功"})
+    except exc.IntegrityError:
+        db_session.rollback();
+        return jsonify({"code":0,"message":"注册失败"})
 
 
 @api.route("/api/v1.0/ho_login", methods=["POST"])
@@ -121,13 +127,13 @@ def get_house_owner():
 
     #return json.dumps(entity.to_json(), ensure_ascii=False)
     return jsonify({'code': 1, 'ho_id': entity.ho_id, 'ho_name': entity.ho_name, 'ho_email': entity.ho_email, 'message': '操作成功', 'token': g.token})
-@api.route("/api/v1.0/get_ho_by_mobile/<string:ho_mobile>",methods=["GET"])
+@api.route("/api/v1.0/get_by_ho_mobile")
 def getbymobile():
     current_user = g.current_user
     entity = db_session.query(HouseOwner).filter(HouseOwner.ho_mobile == current_user.ho_mobile).one()
     db_session.close()
     return jsonify({'code': 1, 'ho_id': entity.ho_id, 'ho_name': entity.ho_name, 'ho_email': entity.ho_email, 'message': '操作成功','token': g.token})
-@api.route("/api/v1.0/get_ho_by_email/<string:ho_email>",methods = ["GET"])
+@api.route("/api/v1.0/get_by_ho_email")
 def getbyemail():
     current_user = g.current_user
     entity = db_session.query(HouseOwner).filter(HouseOwner.ho_email == current_user.ho_email).one()

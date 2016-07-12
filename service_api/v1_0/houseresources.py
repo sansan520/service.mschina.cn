@@ -73,12 +73,13 @@ def get_by_ho_id(ho_id):
     except exc.IntegrityError:
         return jsonify({"code":0,"message":"参数错误"})
 #根据点击量更新用户的房源类型
-@api.route("api/v1.0/update_ty_id",methods=["PUT"])
+@api.route("/api/v1.0/update_ty_id",methods=["PUT"])
 def update_ty_id(ty_id):
+
     if not ty_id:
         return jsonify({"code":0,"message":"房源类型不存在"})
     try:
-        db_session.update(HouseResources.ty_id).query(HouseType.ty_id).filter(HouseResources.hs_hitvalume == HouseType.ty_valume).first()
+        db_session.update(HouseResources.ty_id).query(HouseType.ty_id).filter(HouseResources.hs_hitvalume == HouseType.ty_valume)
         db_session.commit()
         return jsonify({"code": 1, "message": "房源类型更新成功"})
     except exc.IntegrityError:
