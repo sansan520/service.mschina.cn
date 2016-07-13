@@ -114,7 +114,7 @@ def house_owner_login():
     # pipeline.expire("token:%s" % token, 3600*5)
     # pipeline.execute()
 
-    return jsonify({'code': 1, 'message': '成功登录', 'acount': ho_account})
+    return jsonify({'code': 1, 'message': '成功登录', 'current_user': houseowner.to_json()})
 
 @api.route("/api/v1.0/get_ho_by_token")
 # @login_check

@@ -1,6 +1,6 @@
 #coding:utf8
 from flask import jsonify,request,g,current_app
-from sqlalchemy import exc
+from sqlalchemy import exc, desc
 from service_api.model import db_session,HouseResources,HouseType,HouseOwner
 from . import api
 @api.route("/api/v1.0/hs_insert",methods = ["POST"])
@@ -97,3 +97,11 @@ def delete_houseresources(hs_id):
     except exc.IntegrityError:
         db_session.rollback()
         return jsonify({"code": 0, "message": "删除失败"})
+
+
+@api.route("/api/v1.0/get_hot_source4index")
+def hot_resources_4_index():
+    # ty_id =4 热门房源
+    entities = db_session.query(HouseResources).filter(HouseResources.ty_id == 4).order_by(desc(HouseResources.hs_id)).limit(3).all()
+    return jsonify({"code": 1, "message": [entity.to_json() for entity in entities]})
+

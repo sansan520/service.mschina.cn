@@ -35,10 +35,13 @@ class HouseOwner(Base):
     def to_json(self):
         return {
             'ho_id': self.ho_id,
+            'ho_account': self.ho_account,
             'ho_name': self.ho_name,
-            'ho_password':self.ho_password,
+            'ho_password': self.ho_password,
             'ho_tel': self.ho_tel,
-            'ho_mobile':self.ho_mobile
+            'ho_mobile': self.ho_mobile,
+            'ho_email': self.ho_email,
+            'ho_images': self.ho_images
         }
 
 class HouseType(Base):
@@ -74,6 +77,18 @@ class HouseResources(Base):
     hs_hitvalume = Column('hs_hitvalume', String(50))
     hs_images = Column('hs_images', String(500))
 
+    def to_json(self):
+        return {
+            'hs_id': self.hs_id,
+            'ty_id': self.ty_id,
+            'ho_id': self.ho_id,
+            'hs_province': self.hs_province,
+            'hs_city': self.hs_city,
+            'hs_country': self.hs_country,
+            'hs_address': self.hs_address,
+            'hs_hitvalume':self.hs_hitvalume,
+            'hs_images': self.hs_images
+        }
 
 class RoomType(Base):
 
