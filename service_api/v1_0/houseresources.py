@@ -98,10 +98,25 @@ def delete_houseresources(hs_id):
         db_session.rollback()
         return jsonify({"code": 0, "message": "删除失败"})
 
-
+#  为首页获取3条热门房源
 @api.route("/api/v1.0/get_hot_source4index")
 def hot_resources_4_index():
     # ty_id =4 热门房源
     entities = db_session.query(HouseResources).filter(HouseResources.ty_id == 4).order_by(desc(HouseResources.hs_id)).limit(3).all()
     return jsonify({"code": 1, "message": [entity.to_json() for entity in entities]})
 
+#  为首页获取5条特色房源
+@api.route("/api/v1.0/get_special_resources4index")
+def special_resources_4_index():
+    # ty_id = 2
+    entities = db_session.query(HouseResources).filter(HouseResources.ty_id == 2).order_by(
+        desc(HouseResources.hs_id)).limit(5).all()
+    return jsonify({"code": 1, "message": [entity.to_json() for entity in entities]})
+
+#  为首页获取5条金牌房源
+@api.route("/api/v1.0/get_goden_resources4index")
+def goden_resources_4_index():
+    # ty_id = 3
+    entities = db_session.query(HouseResources).filter(HouseResources.ty_id == 3).order_by(
+        desc(HouseResources.hs_id)).limit(5).all()
+    return jsonify({"code": 1, "message": [entity.to_json() for entity in entities]})
