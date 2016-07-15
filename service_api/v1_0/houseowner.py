@@ -3,7 +3,7 @@ import hashlib
 import time
 from functools import wraps
 from flask import jsonify, request, g, current_app
-from service_api.model import HouseOwner, db_session
+from service_api.models.model import HouseOwner, db_session
 from sqlalchemy import exc
 from . import api
 
@@ -83,38 +83,38 @@ def ho_register():
         return jsonify({"code":0,"message":"注册失败"})
 
 
-@api.route("/api/v1.0/ho_login", methods=["POST"])
-def house_owner_login():
-
-    ho_account = request.json["ho_account"]
-    ho_password = request.json["ho_password"]
-
-    houseowner = db_session.query(HouseOwner).filter(HouseOwner.ho_account == ho_account).first()
-    if not houseowner:
-        return jsonify({'code': 0, 'message': '没有此用户'})
-
-    if houseowner.ho_password != ho_password:
-        return jsonify({'code': 0, 'message': '密码错误'})
-
-    # m = hashlib.md5()
-    # m.update(ho_account.encode("utf8"))
-    # m.update(ho_password.encode("utf8"))
-    # m.update(str(int(time.time())).encode("utf8"))
-    # token = m.hexdigest()
-
-
-    # redis_store.hmset("user:%s" % ho_account, {"token": token, "online": 1})
-    # redis_store.set("token:%s" % token, ho_account)
-    # redis_store.expire("token:%s" % token, 3600*5)
-
-    # 为防止传输过程中出错,改用管道
-    # pipeline = current_app.redis.pipeline()
-    # pipeline.hmset("user:%s" % ho_account, {"token": token, "online": 1})
-    # pipeline.set("token:%s" % token, ho_account)
-    # pipeline.expire("token:%s" % token, 3600*5)
-    # pipeline.execute()
-
-    return jsonify({'code': 1, 'message': '成功登录', 'current_user': houseowner.to_json()})
+# @api.route("/api/v1.0/ho_login", methods=["POST"])
+# def house_owner_login():
+#
+#     ho_account = request.json["ho_account"]
+#     ho_password = request.json["ho_password"]
+#
+#     houseowner = db_session.query(HouseOwner).filter(HouseOwner.ho_account == ho_account).first()
+#     if not houseowner:
+#         return jsonify({'code': 0, 'message': '没有此用户'})
+#
+#     if houseowner.ho_password != ho_password:
+#         return jsonify({'code': 0, 'message': '密码错误'})
+#
+#     # m = hashlib.md5()
+#     # m.update(ho_account.encode("utf8"))
+#     # m.update(ho_password.encode("utf8"))
+#     # m.update(str(int(time.time())).encode("utf8"))
+#     # token = m.hexdigest()
+#
+#
+#     # redis_store.hmset("user:%s" % ho_account, {"token": token, "online": 1})
+#     # redis_store.set("token:%s" % token, ho_account)
+#     # redis_store.expire("token:%s" % token, 3600*5)
+#
+#     # 为防止传输过程中出错,改用管道
+#     # pipeline = current_app.redis.pipeline()
+#     # pipeline.hmset("user:%s" % ho_account, {"token": token, "online": 1})
+#     # pipeline.set("token:%s" % token, ho_account)
+#     # pipeline.expire("token:%s" % token, 3600*5)
+#     # pipeline.execute()
+#
+#     return jsonify({'code': 1, 'message': '成功登录', 'current_user': houseowner.to_json()})
 
 @api.route("/api/v1.0/get_ho_by_token")
 # @login_check
@@ -140,27 +140,27 @@ def getbyemail():
     db_session.close()
     return jsonify({'code': 1, 'ho_id': entity.ho_id, 'ho_name': entity.ho_name, 'ho_email': entity.ho_email, 'message': '操作成功','token': g.token})
 
-@api.route("/api/v1.0/logout")
-# @login_check
-def logout():
-
-    current_user = g.current_user
-
-    pipeline = current_app.redis.pipeline()
-    pipeline.delete("token:%s" % g.token)
-    pipeline.hmset("user:%s" % current_user.ho_account, {"online": 0})
-    pipeline.execute()
-    '''
-    127.0.0.1:6379> hget user:jsonwang token
-    "61e35e6c30f3b51a2e8e45c4016f98ea"
-    127.0.0.1:6379> keys *
-    1) "user:jsonwang"
-    127.0.0.1:6379> hget user:jsonwang token
-    "61e35e6c30f3b51a2e8e45c4016f98ea"
-    127.0.0.1:6379> hget user:jsonwang online
-    "0"
-    '''
-    return jsonify({"code": 1, "message": "注销成功"})
+# @api.route("/api/v1.0/logout")
+# # @login_check
+# def logout():
+#
+#     current_user = g.current_user
+#
+#     pipeline = current_app.redis.pipeline()
+#     pipeline.delete("token:%s" % g.token)
+#     pipeline.hmset("user:%s" % current_user.ho_account, {"online": 0})
+#     pipeline.execute()
+#     '''
+#     127.0.0.1:6379> hget user:jsonwang token
+#     "61e35e6c30f3b51a2e8e45c4016f98ea"
+#     127.0.0.1:6379> keys *
+#     1) "user:jsonwang"
+#     127.0.0.1:6379> hget user:jsonwang token
+#     "61e35e6c30f3b51a2e8e45c4016f98ea"
+#     127.0.0.1:6379> hget user:jsonwang online
+#     "0"
+#     '''
+#     return jsonify({"code": 1, "message": "注销成功"})
 
 
 @api.teardown_request

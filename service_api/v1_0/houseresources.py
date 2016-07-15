@@ -1,7 +1,7 @@
 #coding:utf8
 from flask import jsonify,request,g,current_app
 from sqlalchemy import exc, desc
-from service_api.model import db_session,HouseResources,HouseType,HouseOwner
+from service_api.models.model import db_session,HouseResources,HouseType,HouseOwner
 from . import api
 @api.route("/api/v1.0/hs_insert",methods = ["POST"])
 def insert_houseresources():

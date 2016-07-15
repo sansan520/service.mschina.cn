@@ -34,12 +34,22 @@ class UserBase(db.Model):
     user_password = Column('user_password', String(45), nullable=False)
     user_mobile = Column('user_mobile', String(45), nullable=False)
     user_headimg = Column('user_headimg', String(100))
+    user_type = Column('user_type', Integer, nullable=False)  # 0房东，1游客
 
     user_createtime = Column('user_createtime', DateTime, default=datetime.datetime.now)
     user_modifytime = Column('user_modifytime', DateTime, default=datetime.datetime.now)
 
     houseowner = db.relationship('HouseOwner', backref='userbase', lazy='dynamic')
 
+
+    def to_json(self):
+        return {
+            'user_id': self.user_id,
+            'user_account': self.user_account,
+            'user_mobile': self.user_mobile,
+            'user_headimg': self.user_headimg,
+            'user_type': self.user_type
+        }
 
 # 房东表(用户扩展表,若想成为房东就需要提供更多资料)
 class HouseOwner(db.Model):
@@ -52,7 +62,6 @@ class HouseOwner(db.Model):
     ho_tel = Column('ho_tel', String(45))    # 家庭电话
     ho_email = Column('ho_email', String(45))   # 邮箱
     ho_nicard = Column('ho_nicard', String(100), nullable=False)    # 身份证件照
-    user_type = Column('type',Integer,nullable=False)#0房东，1游客
 
     ho_createtime = Column('ho_createtime', DateTime, default=datetime.datetime.now)
     ho_modifytime = Column('ho_modifytime', DateTime, default=datetime.datetime.now)
@@ -109,8 +118,8 @@ class HouseResources(db.Model):
     hs_hitvalume = Column('hs_hitvalume', String(50))
     hs_images = Column('hs_images', String(500))
 
-    hs_createtime = Column('hs_createtime',DateTime,default=datetime.datetime.now())
-    hs_modifytime = Column('hs_modifytime',DateTime,default=datetime.datetime.now())
+    hs_createtime = Column('hs_createtime', DateTime, default=datetime.datetime.now())
+    hs_modifytime = Column('hs_modifytime', DateTime, default=datetime.datetime.now())
 
     def to_json(self):
         return {
