@@ -108,6 +108,9 @@ class HouseResources(db.Model):
     hs_hitvalume = Column('hs_hitvalume', String(50))
     hs_images = Column('hs_images', String(500))
 
+    hs_createtime = Column('hs_createtime',DateTime,default=datetime.datetime.now())
+    hs_modifytime = Column('hs_modifytime',DateTime,default=datetime.datetime.now())
+
     def to_json(self):
         return {
             'hs_id': self.hs_id,
