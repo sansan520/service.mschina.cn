@@ -1,21 +1,32 @@
-# coding:utf-8
+# -*- coding: utf-8 -*-
 import datetime
 from sqlalchemy import create_engine, ForeignKey, Column, Integer, String, DateTime, \
     DECIMAL
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, scoped_session
-from service_api.config import Conf
+import os,sys
+#parentdir  父目录
+granddir =os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, granddir)
+parentdir=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(1,parentdir)
 
-engine = create_engine(Conf.MYSQL_INFO, pool_recycle=7200)
+# print(sys.path)
+from service_api.run import create_app
+from flask_sqlalchemy import SQLAlchemy
+from flask_script import Manager
+from flask_migrate import Migrate, MigrateCommand
 
-Base = declarative_base()
+app = create_app()
+db = SQLAlchemy(app)
+migrate = Migrate(app, db)
+manager = Manager(app)
+manager.add_command('db', MigrateCommand)
 
-db_session = scoped_session(sessionmaker(autocommit=False,autoflush=False, bind=engine))
-
-#Base.query = db_session.query_property()
+engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'], pool_recycle=7200)
+db_session = scoped_session(sessionmaker(autocommit=False, autoflush=False, bind=engine))
 
 # 创建数据表
-class HouseOwner(Base):
+class HouseOwner(db.Model):
 
     __tablename__ = 'houseowner'
 
@@ -44,7 +55,7 @@ class HouseOwner(Base):
             'ho_images': self.ho_images
         }
 
-class HouseType(Base):
+class HouseType(db.Model):
 
     __tablename__ = "housetype"
 
@@ -62,7 +73,7 @@ class HouseType(Base):
         return house_type
 
 # 房源表
-class HouseResources(Base):
+class HouseResources(db.Model):
 
     __tablename__ = "houseresources"
 
@@ -90,7 +101,7 @@ class HouseResources(Base):
             'hs_images': self.hs_images
         }
 
-class RoomType(Base):
+class RoomType(db.Model):
 
     __tablename__ = "roomtype"
 
@@ -98,7 +109,7 @@ class RoomType(Base):
     rt_name = Column('rt_name', String(50), nullable=False)
 
 
-class GuestRoom(Base):
+class GuestRoom(db.Model):
 
     __tablename__ = "guestroom"
 
@@ -118,7 +129,8 @@ class GuestRoom(Base):
         }
 
 if __name__ == '__main__':
-    Base.metadata.create_all(engine)
+    db.create_all()
+    manager.run()
 
 
 #http://www.cnblogs.com/yueerwanwan0204/p/5327912.html

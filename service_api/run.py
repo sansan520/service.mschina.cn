@@ -22,7 +22,7 @@ def create_app():
     # app.q = Auth(access_key=app.config['QINIU_ACCESS_KEY'], secret_key=app.config['QINIU_SECRET_KEY'])
     # app.bucket_name = app.config['BUCKET_NAME']
     app.debug = app.config['DEBUG']
-
+    app.config['SQLALCHEMY_DATABASE_URI'] = app.config['MYSQL_INFO']
     # from service_api.v1_0 import api as api_1_0_blueprint
     app.register_blueprint(api_1_0_blueprint)
 
