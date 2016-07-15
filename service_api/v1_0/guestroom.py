@@ -9,7 +9,7 @@ from sqlalchemy import exc
 '''
 添加新客房
 '''
-@api.route("/api/v1.0/gt_insert", methods=["POST"])
+@api.route("/api/v1.0/gr_insert", methods=["POST"])
 def insert_guestroom():
 
     # hs_id = Column('hs_id', Integer, ForeignKey('houseresources.hs_id', ondelete='CASCADE'))
@@ -20,18 +20,20 @@ def insert_guestroom():
     hs_id = request.get_json().get("hs_id")
     if not hs_id:
         return jsonify({"code": 0, "message": "参数错误"})
-    rt_id = request.get_json().get("rt_id")
-    if not rt_id:
-        return jsonify({"code": 0, "message": "参数错误"})
+    # rt_id = request.get_json().get("rt_id")
+    # if not rt_id:
+    #     return jsonify({"code": 0, "message": "参数错误"})
 
-    gt_price = request.get_json().get("gt_price")
-    gt_describe = request.get_json().get("gt_describe")
+    gr_price = request.get_json().get("gr_price")
+    gr_describe = request.get_json().get("gr_describe")
+    gr_name = request.get_json().get("gr_name")
 
     guestroom = GuestRoom()
     guestroom.hs_id = hs_id
-    guestroom.rt_id = rt_id
-    guestroom.gt_price = gt_price
-    guestroom.gt_describe = gt_describe
+    #guestroom.rt_id = rt_id
+    guestroom.gr_name = gr_name
+    guestroom.gr_price = gr_price
+    guestroom.gr_describe = gr_describe
 
     try:
         db_session.add(guestroom)
@@ -45,9 +47,9 @@ def insert_guestroom():
 '''
 根据客房主键ID,更新客房
 '''
-@api.route("/api/v1.0/gt_update/<int:gt_id>", methods=["PUT"])
-def update_guestroom(gt_id):
-    if not gt_id:
+@api.route("/api/v1.0/gr_update/<int:gr_id>", methods=["PUT"])
+def update_guestroom(gr_id):
+    if not gr_id:
         return jsonify({"code": 0, "message": "参数错误"})
 
     hs_id = request.get_json().get("hs_id")
@@ -57,15 +59,17 @@ def update_guestroom(gt_id):
     if not rt_id:
         return jsonify({"code": 0, "message": "参数错误"})
 
-    gt_price = request.get_json().get("gt_price")
-    gt_describe = request.get_json().get("gt_describe")
+    gr_price = request.get_json().get("gr_price")
+    gr_describe = request.get_json().get("gr_describe")
+    gr_name = request.get_json().get("gr_name")
 
     try:
-        db_session.query(GuestRoom).filter(GuestRoom.gt_id == gt_id).update({
+        db_session.query(GuestRoom).filter(GuestRoom.gr_id == gr_id).update({
             "hs_id": hs_id,
-            "rt_id": rt_id,
-            "gt_price": gt_price,
-            "gt_describe": gt_describe
+            #"rt_id": rt_id,
+            "gr_price": gr_price,
+            "gr_describe": gr_describe,
+            "gr_name":gr_name
         })
 
         db_session.commit()
@@ -77,14 +81,14 @@ def update_guestroom(gt_id):
 '''
 根据客房主键ID,删除客房
 '''
-@api.route("/api/v1.0/gt_delete/<int:gt_id>", methods=["DELETE"])
-def delete_guestroom(gt_id):
+@api.route("/api/v1.0/gr_delete/<int:gr_id>", methods=["DELETE"])
+def delete_guestroom(gr_id):
 
-    if not gt_id:
+    if not gr_id:
         return jsonify({"code": 0, "message": "参数错误"})
     try:
 
-        db_session.query(GuestRoom).filter(GuestRoom.gt_id == gt_id).delete()
+        db_session.query(GuestRoom).filter(GuestRoom.gr_id == gr_id).delete()
         db_session.commit()
         return jsonify({"code": 1, "message": "客房删除成功"})
 
@@ -107,7 +111,7 @@ def get_guestroom_by_hsId(hs_id):
 # 根据房间类型,查询所有客房列表,返回JSON
 @api.route("/api/v1.0/get_guestroom_by_rtId/<int:rt_id>", methods=["GET"])
 def get_guestroom_by_rtId(rt_id):
-    if not hsrt_id_id:
+    if not rt_id:
         return jsonify({"code": 0, "message": "参数错误"})
 
     room_lists = db_session.query(GuestRoom).filter(GuestRoom.rt_id == rt_id).all()

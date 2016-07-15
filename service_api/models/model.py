@@ -145,13 +145,16 @@ class GuestRoom(db.Model):
     gr_price = Column('gt_price', DECIMAL(10, 2))
     gr_describe = Column('gt_describe', String(500))
 
+    gr_createtime = Column('gr_createtime',DateTime,default=datetime.datetime.now())
+    gr_modifytime = Column('gr_modifytiem',DateTime,default=datetime.datetime.now())
+
     def to_json(self):
         return {
-            'gt_id': self.gt_id,
+            'gr_id': self.gr_id,
             'hs_id': self.hs_id,
             'gr_name':self.gr_name,
-            'gt_price': self.gt_price,
-            'gt_describe': self.gt_describe
+            'gr_price': self.gr_price,
+            'gr_describe': self.gr_describe
         }
 
 if __name__ == '__main__':

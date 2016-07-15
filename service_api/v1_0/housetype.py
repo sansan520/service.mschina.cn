@@ -28,46 +28,46 @@ def insert_housetype():
     return jsonify({"code": 0, "message": "类型添加失败"})
 
 
-@api.route("/api/v1.0/ht_update/<int:ty_id>", methods=["PUT"])
-def update_housetype(ty_id):
-    if not ty_id:
-        return jsonify({"code": 0, "message": "参数错误"})
-
-    ty_name = request.get_json().get("ty_name")
-    if not ty_name:
-        return jsonify({"code": 0, "message": "参数错误"})
-
-    try:
-        db_session.query(HouseType).filter(HouseType.ty_id == ty_id).update({
-            "ty_name": ty_name
-        })
-
-        db_session.commit()
-        return jsonify({"code": 1, "message": "类型更新成功"})
-    except exc.IntegrityError:
-        db_session.rollback()
-    return jsonify({"code": 0, "message": "类型更新失败"})
-
-
-@api.route("/api/v1.0/ht_delete/<int:ty_id>", methods=["DELETE"])
-def delete_housetype(ty_id):
-
-    if not ty_id:
-        return jsonify({"code": 0, "message": "参数错误"})
-    try:
-
-        db_session.query(HouseType).filter(HouseType.ty_id == ty_id).delete()
-        db_session.commit()
-        return jsonify({"code": 1, "message": "类型删除成功"})
-
-    except exc.IntegrityError:
-        db_session.rollback()
-
-    return jsonify({"code": 0, "message": "类型删除失败"})
-
-@api.route("/api/v1.0/get_all_house_type", methods=["GET"])
-def getall_housetype():
-
-    housetype_all = db_session.query(HouseType).all()
-
-    return jsonify({"code": 1, "message": [housetype.to_json() for housetype in housetype_all]})
+# @api.route("/api/v1.0/ht_update/<int:ty_id>", methods=["PUT"])
+# def update_housetype(ty_id):
+#     if not ty_id:
+#         return jsonify({"code": 0, "message": "参数错误"})
+#
+#     ty_name = request.get_json().get("ty_name")
+#     if not ty_name:
+#         return jsonify({"code": 0, "message": "参数错误"})
+#
+#     try:
+#         db_session.query(HouseType).filter(HouseType.ty_id == ty_id).update({
+#             "ty_name": ty_name
+#         })
+#
+#         db_session.commit()
+#         return jsonify({"code": 1, "message": "类型更新成功"})
+#     except exc.IntegrityError:
+#         db_session.rollback()
+#     return jsonify({"code": 0, "message": "类型更新失败"})
+#
+#
+# @api.route("/api/v1.0/ht_delete/<int:ty_id>", methods=["DELETE"])
+# def delete_housetype(ty_id):
+#
+#     if not ty_id:
+#         return jsonify({"code": 0, "message": "参数错误"})
+#     try:
+#
+#         db_session.query(HouseType).filter(HouseType.ty_id == ty_id).delete()
+#         db_session.commit()
+#         return jsonify({"code": 1, "message": "类型删除成功"})
+#
+#     except exc.IntegrityError:
+#         db_session.rollback()
+#
+#     return jsonify({"code": 0, "message": "类型删除失败"})
+#
+# @api.route("/api/v1.0/get_all_house_type", methods=["GET"])
+# def getall_housetype():
+#
+#     housetype_all = db_session.query(HouseType).all()
+#
+#     # return jsonify({"code": 1, "message": [housetype.to_json() for housetype in housetype_all]})
