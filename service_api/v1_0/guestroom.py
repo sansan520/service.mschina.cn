@@ -2,7 +2,7 @@
 
 from functools import wraps
 from flask import jsonify, request, g, current_app
-from service_api.model import GuestRoom, db_session
+from service_api.models.model import GuestRoom, db_session
 from . import api
 from sqlalchemy import exc
 
