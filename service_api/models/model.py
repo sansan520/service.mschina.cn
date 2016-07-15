@@ -52,6 +52,7 @@ class HouseOwner(db.Model):
     ho_tel = Column('ho_tel', String(45))    # 家庭电话
     ho_email = Column('ho_email', String(45))   # 邮箱
     ho_nicard = Column('ho_nicard', String(100), nullable=False)    # 身份证件照
+    user_type = Column('type',Integer,nullable=False)#0房东，1游客
 
     ho_createtime = Column('ho_createtime', DateTime, default=datetime.datetime.now)
     ho_modifytime = Column('ho_modifytime', DateTime, default=datetime.datetime.now)
