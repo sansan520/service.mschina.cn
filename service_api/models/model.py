@@ -27,6 +27,7 @@ db_session = scoped_session(sessionmaker(autocommit=False, autoflush=False, bind
 
 # 用户基础表(游客/房东公共部分)
 class UserBase(db.Model):
+
     __tablename__ = 'userbase'
 
     user_id = Column('user_id', Integer, primary_key=True, autoincrement=True)

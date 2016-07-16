@@ -1,7 +1,7 @@
 #coding:utf8
 from flask import jsonify,request,g,current_app
 from sqlalchemy import exc, desc
-from service_api.models.model import db_session,HouseResources,HouseType,HouseOwner
+from service_api.models.model import db_session, HouseResources, HouseType, HouseOwner
 from . import api
 @api.route("/api/v1.0/hs_insert",methods = ["POST"])
 def insert_houseresources():
@@ -120,3 +120,16 @@ def goden_resources_4_index():
     entities = db_session.query(HouseResources).filter(HouseResources.ty_id == 3).order_by(
         desc(HouseResources.hs_id)).limit(5).all()
     return jsonify({"code": 1, "message": [entity.to_json() for entity in entities]})
+
+
+#  分页查询  http://www.cnblogs.com/agmcs/p/4445583.html
+@api.route("/api/v1.0/get_res_page")
+@api.route("/api/v1.0/get_res_page/<int:page>")
+def get_res_page(page=1):
+    pagesize = 6
+    pagination = HouseResources.query.order_by(HouseResources.hs_id.desc()).paginate(page, per_page=pagesize, error_out=False)
+
+    entities = pagination.items
+    totalpages = pagination.pages  # 总页数
+    sums = pagination.total  # 总记录数
+    return jsonify({"code": 1, "totalPages": totalpages, "sums":sums, "message": [entity.to_json() for entity in entities]})
