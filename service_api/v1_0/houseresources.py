@@ -123,13 +123,14 @@ def goden_resources_4_index():
 
 
 #  分页查询  http://www.cnblogs.com/agmcs/p/4445583.html
-@api.route("/api/v1.0/get_res_page")
 @api.route("/api/v1.0/get_res_page/<int:page>")
 def get_res_page(page=1):
     pagesize = 6
     pagination = HouseResources.query.order_by(HouseResources.hs_id.desc()).paginate(page, per_page=pagesize, error_out=False)
 
     entities = pagination.items
-    totalpages = pagination.pages  # 总页数
-    sums = pagination.total  # 总记录数
-    return jsonify({"code": 1, "totalPages": totalpages, "sums":sums, "message": [entity.to_json() for entity in entities]})
+
+    pages = pagination.pages  # 总页数
+    total = pagination.total  # 总记录数
+    # return jsonify({"code": 1})
+    return jsonify({"code": 1, "page": page, "pages": pages, "total": total, "message": [entity.to_json() for entity in entities]})
