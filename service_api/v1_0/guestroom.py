@@ -125,14 +125,14 @@ def getall_guestroom():
     guestroom_all = db_session.query(GuestRoom).all()
 
     return jsonify({"code": 1, "message": [guestroom.to_json() for guestroom in guestroom_all]})
-@api.route("/api1.0/findbygrname/<string:gr_name>", methods=['GET'])
+@api.route("/api/v1.0/findbygrname/<string:gr_name>", methods=['GET'])
 def findbygrname(gr_name):
     if not gr_name:
         return jsonify({"code": 0, "message": "客房不存在"})
     entities = db_session.query(GuestRoom).filter_by(GuestRoom.gr_name == gr_name).all()
     return jsonify({"code": 1, "message": [entity.to_json() for entity in entities]})
 
-@api.route("/api1.0/findbygrprice/<string:gr_price>", methods=['GET'])
+@api.route("/api/v1.0/findbygrprice/<string:gr_price>", methods=['GET'])
 def findbygrprice(gr_price):
     if not gr_price:
         return jsonify({"code": 0, "message": "价格不存在"})
