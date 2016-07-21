@@ -16,8 +16,8 @@ def create_app():
     # redis_store = redis.StrictRedis(host=Conf.REDIS_HOST, port=Conf.REDIS_PORT, db=Conf.REDIS_DB,
     #                                 password=Conf.REDIS_PASSWORD)
     # app.secret_key = app.config['SECRET_KEY']
-    app.redis = redis.Redis(host=app.config['REDIS_HOST'], port=app.config['REDIS_PORT'],
-                            db=app.config['REDIS_DB'], password=app.config['REDIS_PASSWORD'])
+    app.session_redis = redis.Redis(host=app.config['REDIS_HOST'], port=app.config['REDIS_PORT'],
+                            db=app.config['SESSION_DB'], password=app.config['REDIS_PASSWORD'])
 
     # app.q = Auth(access_key=app.config['QINIU_ACCESS_KEY'], secret_key=app.config['QINIU_SECRET_KEY'])
     # app.bucket_name = app.config['BUCKET_NAME']

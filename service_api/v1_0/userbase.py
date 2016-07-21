@@ -8,6 +8,11 @@ from service_api.models.model import UserBase, db_session
 from sqlalchemy import exc
 from . import api
 
+#http://www.cnblogs.com/melonjiang/p/5342505.html
+# http://redis.readthedocs.io/en/2.4/hash.html
+# http://blog.csdn.net/u012894975/article/details/51333535  #python操作redis
+
+
 @api.route("/api/v1.0/user_login", methods=["POST"])
 def user_login():
 
@@ -20,6 +25,34 @@ def user_login():
 
     if userbase.user_password != user_password:
         return jsonify({'code': 0, 'message': '密码错误'})
+
+    m = hashlib.md5()
+    m.update(user_account.encode("utf8"))
+    m.update(user_password.encode("utf8"))
+    # m.update(str(int(time.time())).encode("utf8"))
+    user_account = m.hexdigest()   # 2dd99d263ecc5ebf25b91d2532b46080
+
+    # 将该用户消息保存到redis中redis.Redis(host='127.0.0.1', port=6379, db=0)
+    pipeline = current_app.session_redis.pipeline()
+    # user_json = userbase.to_json()  # => test ok like hmDict = {'field': 'foo', 'field1': 'bar'}
+    pipeline.hmset("user:%s" % user_account, {"current_user": userbase.to_json()})
+    pipeline.expire("user:%s" % user_account, 60*5)  # 秒单位
+    pipeline.execute()
+    # test ok ,return  bytes like b'sansan',b'1',[b'1']
+    # result = current_app.session_redis.hmget('user:%s' % user_account, ['user_id', 'user_account'])
+    # result_01 = current_app.session_redis.hmget('user:%s' % user_account, 'user_id')
+    # result_02 = current_app.session_redis.hget('user:%s' % user_account, 'user_id')
+    # print(result)
+    # print(result_01)
+    # print(result_02)
+    # 简单类型存取
+    # pipeline.set("username:%s" % user_account, userbase.user_mobile)
+    # pipeline.expire("username:%s" % user_account, 60 * 2)  # 秒单位
+    # username = current_app.redis.get("username:%s" % user_account)  # bytes name,mobile
+    # print(type(username))
+    # username_new = username.decode()   # bytes to str
+    # print(type(username_new))
+    # 简单类型存取结束
 
     return jsonify({'code': 1, 'message': '成功登录', 'current_user': userbase.to_json()})
 
@@ -48,7 +81,7 @@ def user_register():
     userbase.user_account = user_account
     userbase.user_password = user_password
     userbase.user_mobile = user_mobile
-    userbase.user_id = user_type
+    userbase.user_type = user_type
     userbase.user_headimg = user_headimg
 
     try:
