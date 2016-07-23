@@ -94,12 +94,19 @@ def user_register():
 #查询手机号是否存在
 @api.route("/api/v1.0/get_by_mobile/<string:user_mobile>",methods=["GET"])
 def getbymobile(user_mobile):
-    #current_user = g.current_user
-    entity = db_session.query(UserBase).filter(UserBase.user_mobile == user_mobile).one()
-    return jsonify({'code': 0, "message":[entity.to_json()]})
+    try:
+        entity = db_session.query(UserBase).filter(UserBase.user_mobile == user_mobile).one()
+        return jsonify({"code": 1, "message": [entity.to_json()]})
+    except:
+        return jsonify({"code": 0, "message": "该手机号不存在"})
+    return jsonify({'code': 0, "message":"查询异常"})
 
 #查询账号是否存在
 @api.route("/api/v1.0/get_by_account/<string:user_account>",methods=["GET"])
 def getbyaccount(user_account):
-    entity = db_session.query(UserBase).filter(UserBase.user_account == user_account).one()
-    return jsonify({"code":0,"message":[entity.to_json()]})
+    try:
+        entity = db_session.query(UserBase).filter(UserBase.user_account == user_account).one()
+        return jsonify({"code": 1, "message": [entity.to_json()]})
+    except:
+        return jsonify({"code": 0,"message":"该账号不存在"})
+    return jsonify({"code":0,"message":"查询异常"})
