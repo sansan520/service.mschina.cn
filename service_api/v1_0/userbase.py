@@ -47,6 +47,7 @@ def user_login():
     # print(result_02)
     # 简单类型存取
     # pipeline.set("username:%s" % user_account, userbase.user_mobile)
+
     # pipeline.expire("username:%s" % user_account, 60 * 2)  # 秒单位
     # username = current_app.redis.get("username:%s" % user_account)  # bytes name,mobile
     # print(type(username))
@@ -58,7 +59,7 @@ def user_login():
 
 @api.route("/api/v1.0/user_register", methods=["POST"])
 def user_register():
-
+    userbase = UserBase()
     user_account = request.json["user_account"]
     if not user_account:
         return jsonify({"code": 0, "message": "账号不能为空"})
@@ -66,6 +67,14 @@ def user_register():
     user_password = request.json["user_password"]
     if not user_password:
         return jsonify({"code": 0, "message": "密码不能为空"})
+    m = hashlib.md5()
+    m.update(user_account.encode('utf-8'))
+    m.update(user_password.encode('utf-8'))
+    user_account = m.hexdigest()
+    pipeline = current_app.session_redis.pipeline()
+    pipeline.hmset("user:%s" % user_account,{"current_user":userbase.to_json()})
+    pipeline.expire("user:%s" % user_account,60*5)
+    pipeline.execute()
 
     user_mobile = request.json["user_mobile"]
     if not user_mobile:
@@ -77,7 +86,7 @@ def user_register():
 
     user_headimg = request.json["user_headimg"]
 
-    userbase = UserBase()
+
     userbase.user_account = user_account
     userbase.user_password = user_password
     userbase.user_mobile = user_mobile
