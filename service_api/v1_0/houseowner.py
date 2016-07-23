@@ -127,18 +127,20 @@ def get_house_owner():
 
     #return json.dumps(entity.to_json(), ensure_ascii=False)
     return jsonify({'code': 1, 'ho_id': entity.ho_id, 'ho_name': entity.ho_name, 'ho_email': entity.ho_email, 'message': '操作成功', 'token': g.token})
-@api.route("/api/v1.0/get_by_ho_mobile")
-def getbymobile():
-    current_user = g.current_user
-    entity = db_session.query(HouseOwner).filter(HouseOwner.ho_mobile == current_user.ho_mobile).one()
-    db_session.close()
-    return jsonify({'code': 1, 'ho_id': entity.ho_id, 'ho_name': entity.ho_name, 'ho_email': entity.ho_email, 'message': '操作成功','token': g.token})
-@api.route("/api/v1.0/get_by_ho_email")
-def getbyemail():
-    current_user = g.current_user
-    entity = db_session.query(HouseOwner).filter(HouseOwner.ho_email == current_user.ho_email).one()
-    db_session.close()
-    return jsonify({'code': 1, 'ho_id': entity.ho_id, 'ho_name': entity.ho_name, 'ho_email': entity.ho_email, 'message': '操作成功','token': g.token})
+
+#
+# @api.route("/api/v1.0/get_by_ho_mobile")
+# def getbymobile():
+#     current_user = g.current_user
+#     entity = db_session.query(HouseOwner).filter(HouseOwner.ho_mobile == current_user.ho_mobile).one()
+#     db_session.close()
+#     return jsonify({'code': 1, 'ho_id': entity.ho_id, 'ho_name': entity.ho_name, 'ho_email': entity.ho_email, 'message': '操作成功','token': g.token})
+# @api.route("/api/v1.0/get_by_ho_email")
+# def getbyemail():
+#     current_user = g.current_user
+#     entity = db_session.query(HouseOwner).filter(HouseOwner.ho_email == current_user.ho_email).one()
+#     db_session.close()
+#     return jsonify({'code': 1, 'ho_id': entity.ho_id, 'ho_name': entity.ho_name, 'ho_email': entity.ho_email, 'message': '操作成功','token': g.token})
 
 # @api.route("/api/v1.0/logout")
 # # @login_check
