@@ -91,3 +91,15 @@ def user_register():
     except exc.IntegrityError:
         db_session.rollback();
         return jsonify({"code":0,"message":"注册失败"})
+#查询手机号是否存在
+@api.route("/api/v1.0/get_by_mobile/<string:user_mobile>",methods=["GET"])
+def getbymobile(user_mobile):
+    #current_user = g.current_user
+    entity = db_session.query(UserBase).filter(UserBase.ho_mobile == user_mobile).one()
+    return jsonify({'code': 0, "message":[entity.to_json()]})
+
+#查询账号是否存在
+@api.route("/api/v1.0/get_by_account/<string:user_account>",methods=["GET"])
+def getbyaccount(user_account):
+    entity = db_session.query(UserBase).filter(UserBase.user_account == user_account).one()
+    return jsonify({"code":0,"message":[entity.to_json()]})
