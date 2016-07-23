@@ -61,7 +61,7 @@ def user_register():
 
     user_account = request.json["user_account"]
     if not user_account:
-        return jsonify({"code":0,"message":"账号不能为空"})
+        return jsonify({"code": 0, "message": "账号不能为空"})
 
     user_password = request.json["user_password"]
     if not user_password:
@@ -73,7 +73,7 @@ def user_register():
 
     user_type = request.json["user_type"]       # 0房东，1游客
     if not user_type:
-        return jsonify({"code":0,"message":"用户类型必须是游客或者房东"})
+        return jsonify({"code": 0, "message": "用户类型必须是游客或者房东"})
 
     user_headimg = request.json["user_headimg"]
 
