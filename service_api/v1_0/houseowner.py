@@ -61,9 +61,9 @@ def ho_register():
     house_owner = HouseOwner()
     house_owner.user_id = user_id
     house_owner.ho_name = ho_name
-    house_owner.ho_tel = request.get_json().get("ho_tel")
+    house_owner.ho_tel = ho_tel
     house_owner.ho_nicard = ho_nicard
-    house_owner.ho_email = request.get_json().get("ho_email")
+    house_owner.ho_email = ho_email
     try:
         db_session.add(house_owner)
         db_session.commit()

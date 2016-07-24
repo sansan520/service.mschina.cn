@@ -59,7 +59,7 @@ def user_login():
 
 @api.route("/api/v1.0/user_register", methods=["POST"])
 def user_register():
-    userbase = UserBase()
+
     user_account = request.json["user_account"]
     if not user_account:
         return jsonify({"code": 0, "message": "账号不能为空"})
@@ -67,26 +67,18 @@ def user_register():
     user_password = request.json["user_password"]
     if not user_password:
         return jsonify({"code": 0, "message": "密码不能为空"})
-    m = hashlib.md5()
-    m.update(user_account.encode('utf-8'))
-    m.update(user_password.encode('utf-8'))
-    user_account = m.hexdigest()
-    pipeline = current_app.session_redis.pipeline()
-    pipeline.hmset("user:%s" % user_account,{"current_user":userbase.to_json()})
-    pipeline.expire("user:%s" % user_account,60*5)
-    pipeline.execute()
 
     user_mobile = request.json["user_mobile"]
     if not user_mobile:
         return jsonify({"code": 0, "message": "手机号不能为空"})
 
     user_type = request.json["user_type"]       # 0房东，1游客
-    if not user_type:
+    if user_type is None:
         return jsonify({"code": 0, "message": "用户类型必须是游客或者房东"})
 
     user_headimg = request.json["user_headimg"]
 
-
+    userbase = UserBase()
     userbase.user_account = user_account
     userbase.user_password = user_password
     userbase.user_mobile = user_mobile
@@ -96,6 +88,16 @@ def user_register():
     try:
         db_session.add(userbase)
         db_session.commit()
+
+        m = hashlib.md5()
+        m.update(user_account.encode('utf-8'))
+        m.update(user_password.encode('utf-8'))
+        user_hash_account = m.hexdigest()
+        pipeline = current_app.session_redis.pipeline()
+        pipeline.hmset("user:%s" % user_hash_account, {"current_user": userbase.to_json()})
+        pipeline.expire("user:%s" % user_hash_account, 60 * 5)
+        pipeline.execute()
+
         return jsonify({"code":1,"message":"恭喜您注册成功"})
     except exc.IntegrityError:
         db_session.rollback();

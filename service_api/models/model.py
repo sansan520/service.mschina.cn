@@ -59,7 +59,7 @@ class HouseOwner(db.Model):
 
     ho_id = Column('ho_id', Integer, primary_key=True, autoincrement=True)
     user_id = Column('user_id', Integer, ForeignKey('userbase.user_id'))   # 外键
-    ho_name = Column('user_name', String(45), index=True, nullable=False)   # 真实姓名
+    ho_name = Column('ho_name', String(45), index=True, nullable=False)   # 真实姓名
     ho_tel = Column('ho_tel', String(45))    # 家庭电话
     ho_email = Column('ho_email', String(45))   # 邮箱
     ho_nicard = Column('ho_nicard', String(100), nullable=False)    # 身份证件照
