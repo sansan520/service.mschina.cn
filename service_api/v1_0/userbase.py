@@ -98,11 +98,50 @@ def user_register():
         pipeline.expire("user:%s" % user_hash_account, 60 * 60 * 5)
         pipeline.execute()
 
-        return jsonify({"code":1,"message":"恭喜您注册成功"})
+        return jsonify({"code": 1, "message": "恭喜您注册成功"})
     except exc.IntegrityError:
         db_session.rollback();
         return jsonify({"code":0,"message":"注册失败"})
-#查询手机号是否存在
+
+@api.route("/api/v1.0/ho_register", methods=["POST"])
+def ho_register():
+    user_id = request.get_json().get("user_id")
+    ho_name = request.get_json().get("ho_name")
+    if not ho_name:
+        return jsonify({"code": 0, "message": "姓名不能为空"})
+    ho_email = request.get_json().get("ho_email")
+    if not ho_email:
+        return jsonify({"code": 0, "message": "邮箱不能为空"})
+    ho_nicard = request.get_json().get("ho_nicard")
+    if not ho_nicard:
+        return jsonify({"code": 0, "message": "证件照不能为空"})
+    ho_tel = request.get_json().get("ho_tel")
+
+    house_owner = HouseOwner()
+    house_owner.user_id = user_id
+    house_owner.ho_name = ho_name
+    house_owner.ho_tel = ho_tel
+    house_owner.ho_nicard = ho_nicard
+    house_owner.ho_email = ho_email
+    try:
+        db_session.add(house_owner)
+        db_session.commit()
+
+        m = hashlib.md5()
+        m.update(user_account.encode('utf-8'))
+        m.update(user_password.encode('utf-8'))
+        user_hash_account = m.hexdigest()
+        pipeline = current_app.session_redis.pipeline()
+        pipeline.hmset("user:%s" % user_hash_account, {"current_user": userbase.to_json()})
+        pipeline.expire("user:%s" % user_hash_account, 60 * 5)
+
+        pipeline.execute()
+        return jsonify({"code": 1, "message": "恭喜您注册成功"})
+    except exc.IntegrityError:
+        db_session.rollback();
+        return jsonify({"code": 0, "message": "注册失败"})
+
+#查询手号是否存在
 @api.route("/api/v1.0/get_by_mobile/<string:user_mobile>",methods=["GET"])
 def getbymobile(user_mobile):
     try:

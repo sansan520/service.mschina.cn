@@ -44,33 +44,6 @@ from . import api
 #     return
 
 
-@api.route("/api/v1.0/ho_register", methods=["POST"])
-def ho_register():
-    user_id = request.get_json().get("user_id")
-    ho_name = request.get_json().get("ho_name")
-    if not ho_name:
-        return jsonify({"code":0,"message":"姓名不能为空"})
-    ho_email = request.get_json().get("ho_email")
-    if not ho_email:
-        return jsonify({"code":0,"message":"邮箱不能为空"})
-    ho_nicard = request.get_json().get("ho_nicard")
-    if not ho_nicard:
-        return jsonify({"code": 0, "message": "证件照不能为空"})
-    ho_tel = request.get_json().get("ho_tel")
-
-    house_owner = HouseOwner()
-    house_owner.user_id = user_id
-    house_owner.ho_name = ho_name
-    house_owner.ho_tel = ho_tel
-    house_owner.ho_nicard = ho_nicard
-    house_owner.ho_email = ho_email
-    try:
-        db_session.add(house_owner)
-        db_session.commit()
-        return jsonify({"code":1,"message":"恭喜您注册成功"})
-    except exc.IntegrityError:
-        db_session.rollback();
-        return jsonify({"code":0,"message":"注册失败"})
 
 
 # @api.route("/api/v1.0/ho_login", methods=["POST"])
