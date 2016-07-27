@@ -106,17 +106,21 @@ def ho_register():
 #
 #     return jsonify({'code': 1, 'message': '成功登录', 'current_user': houseowner.to_json()})
 
-@api.route("/api/v1.0/get_ho_by_token")
+@api.route("/api/v1.0/get_hs/<string:ho_name>")
 # @login_check
-def get_house_owner():
-    current_user = g.current_user
-    # 通过redis中取出的账号查找mysql 数据库,返回该账号其他资料
-    entity = db_session.query(HouseOwner).filter(HouseOwner.ho_account == current_user.ho_account).one()
-    # print(entity.ho_name)
-    db_session.close()
+def get_house_owner(ho_name):
+    try:
+        # 通过redis中取出的账号查找mysql 数据库,返回该账号其他资料
+        entity = db_session.query(HouseOwner).filter(HouseOwner.ho_name == ho_name).one()
+        # print(entity.ho_name)
+        return jsonify({'code': 1, 'message': '操作成功','house_owner':[entity.to_json()]})
+    except:
+        return jsonify({"code":0,"message":"该用户不存在"})
+    return jsonify({"code":0,"message":"查询异常"})
+
 
     #return json.dumps(entity.to_json(), ensure_ascii=False)
-    return jsonify({'code': 1, 'ho_id': entity.ho_id, 'ho_name': entity.ho_name, 'ho_email': entity.ho_email, 'message': '操作成功', 'token': g.token})
+
 
 #
 # @api.route("/api/v1.0/get_by_ho_mobile")

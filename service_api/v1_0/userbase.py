@@ -36,7 +36,7 @@ def user_login():
     pipeline = current_app.session_redis.pipeline()
     # user_json = userbase.to_json()  # => test ok like hmDict = {'field': 'foo', 'field1': 'bar'}
     pipeline.hmset("user:%s" % user_account, {"current_user": userbase.to_json()})
-    pipeline.expire("user:%s" % user_account, 60*5)  # 秒单位
+    pipeline.expire("user:%s" % user_account, 60*60*5)  # 秒单位
     pipeline.execute()
     # test ok ,return  bytes like b'sansan',b'1',[b'1']
     # result = current_app.session_redis.hmget('user:%s' % user_account, ['user_id', 'user_account'])
@@ -95,7 +95,7 @@ def user_register():
         user_hash_account = m.hexdigest()
         pipeline = current_app.session_redis.pipeline()
         pipeline.hmset("user:%s" % user_hash_account, {"current_user": userbase.to_json()})
-        pipeline.expire("user:%s" % user_hash_account, 60 * 5)
+        pipeline.expire("user:%s" % user_hash_account, 60 * 60 * 5)
         pipeline.execute()
 
         return jsonify({"code":1,"message":"恭喜您注册成功"})

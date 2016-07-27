@@ -12,16 +12,23 @@ def insert_houseresources():
     ty_id = request.get_json().get("ty_id")
     if not ty_id:
         return jsonify({"code":0,"message":"请先添加房源类型"})
+    hs_intro = request.get_json().get("hs_intro")
+    hs_province = request.get_json().get("hs_province")
+    hs_city = request.get_json().get("hs_city")
+    hs_country = request.get_json().get("hs_country")
+    hs_address = request.get_json().get("hs_address")
+    hs_images = request.get_json().get("hs_images")
+    hs_hitvalume = 0
     ho_resources = HouseResources()
     ho_resources.ho_id = ho_id
     ho_resources.ty_id = ty_id
-    ho_resources.hs_intro = request.get_json().get("hs_intro")
-    ho_resources.hs_province = request.get_json().get("hs_province")
-    ho_resources.hs_city = request.get_json().get("hs_city")
-    ho_resources.hs_country = request.get_json().get("hs_country")
-    ho_resources.hs_address = request.get_json().get("hs_address")
-    ho_resources.hs_images = request.get_json().get("hs_images")
-    ho_resources.hs_hitvalume = 0
+    ho_resources.hs_intro = hs_intro
+    ho_resources.hs_province = hs_province
+    ho_resources.hs_city = hs_city
+    ho_resources.hs_country = hs_country
+    ho_resources.hs_address = hs_address
+    ho_resources.hs_images = hs_images
+    ho_resources.hs_hitvalume = hs_hitvalume
     try:
         db_session.add(ho_resources)
         db_session.commit()
@@ -29,6 +36,7 @@ def insert_houseresources():
     except exc.IntegrityError:
         return jsonify({"code":0,"message":"房源添加失败"})
 
+#根据主键更新房源
 @api.route("/api/v1.0/hs_edit/<int:hs_id>",methods=["PUT"])
 def update_houseresources(hs_id):
     hs_id = request.get_json().get("hs_id")
