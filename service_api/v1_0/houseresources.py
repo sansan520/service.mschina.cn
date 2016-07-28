@@ -148,24 +148,37 @@ def get_res_page(page=1):
 def findbyprovince(hs_province):
     if not hs_province:
         return jsonify({"code": 0, "message": "对不起，您搜索的省不存在"})
-    entities = db_session.query(HouseResources).filter_by(HouseResources.hs_province == hs_province).all()
-    return jsonify({"code": 1, "message":[entity.to_json() for entity in entities]})
+    try:
+        entities = db_session.query(HouseResources).filter_by(HouseResources.hs_province == hs_province).all()
+        return jsonify({"code": 1, "message":[entity.to_json() for entity in entities]})
+    except:
+        return jsonify({"code": 0, "message": "暂无数据"})
+    return jsonify({"code": 0, "message": "查询异常"})
 
 #按市来查询
 @api.route("/api/v1.0/findbycity/<string:hs_city>", methods=['GET'])
 def findbycity(hs_city):
     if not hs_city:
         return jsonify({"code": 0, "message": "对不起，您搜索的市不存在"})
-    entities = db_session.query(HouseResources).filter_by(HouseResources.hs_city == hs_city).all()
-    return jsonify({"code": 1, "message": [entity.to_json() for entity in entities]})
+    try:
+        entities = db_session.query(HouseResources).filter_by(HouseResources.hs_city == hs_city).all()
+        return jsonify({"code": 1, "message": [entity.to_json() for entity in entities]})
+    except:
+        return jsonify({"code": 0, "message": "暂无数据"})
+    return jsonify({"code": 0, "message": "查询异常"})
 
 #按区来查询
 @api.route("/api/v1.0/findbycountry/<string:hs_country>", methods=['GET'])
 def findbycountry(hs_country):
     if not hs_country:
         return jsonify({"code": 0, "message": "对不起，您搜索的市不存在"})
-    entities = db_session.query(HouseResources).filter_by(HouseResources.hs_country == hs_country).all()
-    return jsonify({"code": 1, "message": [entity.to_json() for entity in entities]})
+    try:
+        entities = db_session.query(HouseResources).filter_by(HouseResources.hs_country == hs_country).all()
+        return jsonify({"code": 1, "message": [entity.to_json() for entity in entities]})
+    except:
+        return jsonify({"code": 0, "message": "暂无数据"})
+    return jsonify({"code": 0, "message": "查询异常"})
+
 
 
 
