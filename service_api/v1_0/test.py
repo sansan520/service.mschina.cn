@@ -1,9 +1,9 @@
 # # coding:utf-8
-# from . import api
-# from service_api.models.model_new import HouseType, db, HouseResources
-# from functools import wraps
-# from flask import jsonify,request
-# from sqlalchemy import exc
+from . import api
+from service_api.models.model import HouseType, db, HouseResources
+from functools import wraps
+from flask import jsonify,request
+from sqlalchemy import exc
 #
 # @api.route("/api/v2.0/get_all_ht")
 # def get_all_housetype():
@@ -75,12 +75,12 @@
 #         db_session.rollback()
 #     return jsonify({"code": 0, "message": "类型更新失败"})
 #
-# #  分页查询  http://www.cnblogs.com/agmcs/p/4445583.html
+#  分页查询  http://www.cnblogs.com/agmcs/p/4445583.html
 # @api.route("/api/v2.0/get_res_page")
 # @api.route("/api/v2.0/get_res_page/<int:page>")
 # def get_page_resources(page=1):
 #
-#     pagination = HouseResources.query.order_by(HouseResources.hs_id.desc()).paginate(page, per_page=6, error_out=False)
+#     pagination = HouseResources.query.order_by(HouseResources.hs_id.desc()).paginate(page, per_page=4, error_out=False)
 #
 #     entities = pagination.items
 #     totalpages = pagination.pages  # 总页数
