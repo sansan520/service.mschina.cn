@@ -55,9 +55,9 @@ def update_guestroom(gr_id):
     hs_id = request.get_json().get("hs_id")
     if not hs_id:
         return jsonify({"code": 0, "message": "参数错误"})
-    rt_id = request.get_json().get("rt_id")
-    if not rt_id:
-        return jsonify({"code": 0, "message": "参数错误"})
+    # rt_id = request.get_json().get("rt_id")
+    # if not rt_id:
+    #     return jsonify({"code": 0, "message": "参数错误"})
 
     gr_price = request.get_json().get("gr_price")
     gr_describe = request.get_json().get("gr_describe")
@@ -109,14 +109,14 @@ def get_guestroom_by_hsId(hs_id):
     return jsonify({"code": 1, "message": [guestroom.to_json() for guestroom in room_lists]})
 
 # 根据房间类型,查询所有客房列表,返回JSON
-@api.route("/api/v1.0/get_guestroom_by_rtId/<int:rt_id>", methods=["GET"])
-def get_guestroom_by_rtId(rt_id):
-    if not rt_id:
-        return jsonify({"code": 0, "message": "参数错误"})
-
-    room_lists = db_session.query(GuestRoom).filter(GuestRoom.rt_id == rt_id).all()
-
-    return jsonify({"code": 1, "message": [guestroom.to_json() for guestroom in room_lists]})
+# @api.route("/api/v1.0/get_guestroom_by_rtId/<int:rt_id>", methods=["GET"])
+# def get_guestroom_by_rtId(rt_id):
+#     if not rt_id:
+#         return jsonify({"code": 0, "message": "参数错误"})
+#
+#     room_lists = db_session.query(GuestRoom).filter(GuestRoom.rt_id == rt_id).all()
+#
+#     return jsonify({"code": 1, "message": [guestroom.to_json() for guestroom in room_lists]})
 
 # 查询所有客房列表,返回JSON
 @api.route("/api/v1.0/get_all_guest_room", methods=["GET"])
