@@ -4,7 +4,7 @@
 修改 model.py 表结构之后,执行步骤:
 1) 在pycharm 编辑器中打开Termial
 2) 执行migrate相关命令:生成数据表,更新数据表
-  --> 1 python model.py db migrade
+  --> 1 python model.py db migrate
   --> 2 python model.py db upgrade
 
 注意:
