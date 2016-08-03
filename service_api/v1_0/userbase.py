@@ -4,7 +4,7 @@ import hashlib
 import time
 from functools import wraps
 from flask import jsonify, request, g, current_app
-from service_api.models.model import UserBase, db_session
+from service_api.models.model import UserBase,HouseOwner, db_session
 from sqlalchemy import exc
 from . import api
 
@@ -127,15 +127,15 @@ def ho_register():
         db_session.add(house_owner)
         db_session.commit()
 
-        m = hashlib.md5()
-        m.update(user_account.encode('utf-8'))
-        m.update(user_password.encode('utf-8'))
-        user_hash_account = m.hexdigest()
-        pipeline = current_app.session_redis.pipeline()
-        pipeline.hmset("user:%s" % user_hash_account, {"current_user": userbase.to_json()})
-        pipeline.expire("user:%s" % user_hash_account, 60 * 5)
-
-        pipeline.execute()
+        # m = hashlib.md5()
+        # m.update(user_account.encode('utf-8'))
+        # m.update(user_password.encode('utf-8'))
+        # user_hash_account = m.hexdigest()
+        # pipeline = current_app.session_redis.pipeline()
+        # pipeline.hmset("user:%s" % user_hash_account, {"current_user": userbase.to_json()})
+        # pipeline.expire("user:%s" % user_hash_account, 60 * 5)
+        #
+        # pipeline.execute()
         return jsonify({"code": 1, "message": "恭喜您注册成功"})
     except exc.IntegrityError:
         db_session.rollback();
