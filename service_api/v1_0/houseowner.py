@@ -79,14 +79,14 @@ from . import api
 #
 #     return jsonify({'code': 1, 'message': '成功登录', 'current_user': houseowner.to_json()})
 
-@api.route("/api/v1.0/get_hs/<string:ho_name>")
+@api.route("/api/v1.0/get_hs/<string:ho_name>",methods=["GET"])
 # @login_check
 def get_house_owner(ho_name):
     try:
         # 通过redis中取出的账号查找mysql 数据库,返回该账号其他资料
         entity = db_session.query(HouseOwner).filter(HouseOwner.ho_name == ho_name).one()
         # print(entity.ho_name)
-        return jsonify({'code': 1, 'message': '操作成功','house_owner':[entity.to_json()]})
+        return jsonify({'code': 1, 'message':[entity.to_json()]})
     except:
         return jsonify({"code":0,"message":"该用户不存在"})
     return jsonify({"code":0,"message":"查询异常"})
