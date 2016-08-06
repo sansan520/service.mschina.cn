@@ -110,7 +110,7 @@ class HouseResources(db.Model):
 
     hs_id = Column('hs_id', Integer, primary_key=True)
     ty_id = Column('ty_id', Integer, ForeignKey('housetype.ty_id'))
-    ho_id = Column('ho_id', Integer, ForeignKey('houseowner.ho_id', ondelete='CASCADE'))
+    user_id = Column('user_id', Integer, ForeignKey('userbase.user_id', ondelete='CASCADE'))
     hs_name = Column('hs_name', String(20))   # 房源名称
     hs_intro = Column('hs_intro', String(500))
     hs_province = Column('hs_province', String(20))
@@ -127,7 +127,7 @@ class HouseResources(db.Model):
         return {
             'hs_id': self.hs_id,
             'ty_id': self.ty_id,
-            'ho_id': self.ho_id,
+            'user_id': self.user_id,
             'hs_name':self.hs_name,
             'hs_province': self.hs_province,
             'hs_city': self.hs_city,

@@ -3,11 +3,11 @@ from flask import jsonify,request,g,current_app
 from sqlalchemy import exc, desc
 from service_api.models.model import db_session, HouseResources, HouseType, HouseOwner
 from . import api
+
 @api.route("/api/v1.0/hs_insert",methods = ["POST"])
 def insert_houseresources():
-    ho_resources = HouseResources()
-    ho_id =request.get_json().get("ho_id")
-    if not ho_id:
+    user_id =request.get_json().get("user_id")
+    if not user_id:
         return jsonify({"code":0,"message":"请先登录"})
     ty_id = request.get_json().get("ty_id")
     if not ty_id:
@@ -18,9 +18,10 @@ def insert_houseresources():
     hs_country = request.get_json().get("hs_country")
     hs_address = request.get_json().get("hs_address")
     hs_images = request.get_json().get("hs_images")
+    hs_status = request.get_json().get("hs_status")
     hs_hitvalume = 0
     ho_resources = HouseResources()
-    ho_resources.ho_id = ho_id
+    ho_resources.user_id = user_id
     ho_resources.ty_id = ty_id
     ho_resources.hs_intro = hs_intro
     ho_resources.hs_province = hs_province
@@ -29,6 +30,7 @@ def insert_houseresources():
     ho_resources.hs_address = hs_address
     ho_resources.hs_images = hs_images
     ho_resources.hs_hitvalume = hs_hitvalume
+    ho_resources.hs_status = hs_status
     try:
         db_session.add(ho_resources)
         db_session.commit()
@@ -42,8 +44,8 @@ def update_houseresources(hs_id):
     hs_id = request.get_json().get("hs_id")
     if not hs_id:
         return  jsonify({"code":0,"message":"房源不存在"})
-    ho_id = request.get_json().get("ho_id")
-    if not ho_id:
+    user_id = request.get_json().get("user_id")
+    if not user_id:
         return jsonify({"code" : 0,"message":"参数错误"})
     ty_id = request.get_json().get("ty_id")
     if not ty_id:
@@ -73,11 +75,11 @@ def update_houseresources(hs_id):
     return jsonify({"code":0,"message":"更新失败"})
 #查询用户名下的房源
 @api.route("/api/v1.0/get_by_ho_id/<int:ho_id>",methods=['GET'])
-def get_by_ho_id(ho_id):
-    if not ho_id:
+def get_by_user_id(user_id):
+    if not user_id:
         return jsonify({"code":0,"message":"用户不存在"})
     try:
-        db_session.query(HouseOwner.ho_id,HouseResources).join(HouseOwner,HouseResources,HouseOwner.ho_id == HouseResources.ho_id).all()
+        db_session.query(HouseOwner.ho_id,HouseResources).join(HouseOwner,HouseResources,HouseOwner.user_id == HouseResources.user_id).all()
     except exc.IntegrityError:
         return jsonify({"code":0,"message":"参数错误"})
 #根据点击量更新用户的房源类型
