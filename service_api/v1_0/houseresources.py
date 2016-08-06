@@ -9,9 +9,11 @@ def insert_houseresources():
     user_id =request.get_json().get("user_id")
     if not user_id:
         return jsonify({"code":0,"message":"请先登录"})
-    ty_id = request.get_json().get("ty_id")
-    if not ty_id:
-        return jsonify({"code":0,"message":"请先添加房源类型"})
+    # ty_id = request.get_json().get("ty_id")
+    # if ty_id!= 0:
+    #     return jsonify({"code":0,"message":"房源类型错误"})  #  房东添加房源类型默认为0
+
+    hs_name = request.get_json().get("hs_name")
     hs_intro = request.get_json().get("hs_intro")
     hs_province = request.get_json().get("hs_province")
     hs_city = request.get_json().get("hs_city")
@@ -19,18 +21,20 @@ def insert_houseresources():
     hs_address = request.get_json().get("hs_address")
     hs_images = request.get_json().get("hs_images")
     hs_status = request.get_json().get("hs_status")
-    hs_hitvalume = 0
+
     ho_resources = HouseResources()
     ho_resources.user_id = user_id
-    ho_resources.ty_id = ty_id
+    ho_resources.ty_id = 1   #  初始化为1 ,当然类型表中得存在这个值
+    ho_resources.hs_name = hs_name
     ho_resources.hs_intro = hs_intro
     ho_resources.hs_province = hs_province
     ho_resources.hs_city = hs_city
     ho_resources.hs_country = hs_country
     ho_resources.hs_address = hs_address
     ho_resources.hs_images = hs_images
-    ho_resources.hs_hitvalume = hs_hitvalume
+    ho_resources.hs_hitvalume = 0
     ho_resources.hs_status = hs_status
+
     try:
         db_session.add(ho_resources)
         db_session.commit()
