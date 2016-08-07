@@ -70,10 +70,11 @@ class HouseOwner(db.Model):
     def to_json(self):
         return {
             'ho_id': self.ho_id,
+            'user_id':self.user_id,
             'ho_name': self.ho_name,
             'ho_tel': self.ho_tel,
             'ho_email': self.ho_email,
-            'ho_images': self.ho_images
+            'ho_nicard': self.ho_nicard
         }
 
 # 游客扩展表(以后可能需要预约登记之类的),就可以加扩展表,登记更多用户资料

@@ -77,15 +77,21 @@ def update_houseresources(hs_id):
     except exc.IntegrityError:
         db_session.rollback()
     return jsonify({"code":0,"message":"更新失败"})
-#查询用户名下的房源
-@api.route("/api/v1.0/get_by_ho_id/<int:ho_id>",methods=['GET'])
-def get_by_user_id(user_id):
+
+
+# 查询用户名下的房源
+@api.route("/api/v1.0/get_resource_by_user_id/<int:user_id>",methods=['GET'])
+def get_resource_by_user_id(user_id):
     if not user_id:
         return jsonify({"code":0,"message":"用户不存在"})
     try:
-        db_session.query(HouseOwner.ho_id,HouseResources).join(HouseOwner,HouseResources,HouseOwner.user_id == HouseResources.user_id).all()
+        # entities = db_session.query(HouseOwner.ho_id,HouseResources).join(HouseOwner,HouseResources,HouseOwner.user_id == HouseResources.user_id).all()
+        entities = db_session.query(HouseResources).filter(HouseResources.user_id == user_id).all()
+        return jsonify({"code":1,"message":[entity.to_json() for entity in entities]})
     except exc.IntegrityError:
         return jsonify({"code":0,"message":"参数错误"})
+
+
 #根据点击量更新用户的房源类型
 @api.route("/api/v1.0/update_ty_id",methods=["PUT"])
 def update_ty_id(ty_id):
