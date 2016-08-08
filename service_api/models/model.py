@@ -136,7 +136,8 @@ class HouseResources(db.Model):
             'hs_address': self.hs_address,
             'hs_hitvalume':self.hs_hitvalume,
             'hs_images': self.hs_images,
-            'hs_status':self.hs_status
+            'hs_status':self.hs_status,
+            'hs_intro':self.hs_intro
         }
 
 # 客房类型表

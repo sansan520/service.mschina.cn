@@ -42,6 +42,14 @@ def insert_houseresources():
     except exc.IntegrityError:
         return jsonify({"code":0,"message":"房源添加失败"})
 
+@api.route("/api/v1.0/get_houseresources_by_hs_id/<int:hs_id>",methods=["GET"])
+def get_houseresources_by_hs_id(hs_id):
+    try:
+        entity = db_session.query(HouseResources).filter(HouseResources.hs_id == hs_id).first()
+        return jsonify({"code": 1, "message": entity.to_json()})
+    except Exception:
+      return jsonify({"code": 0, "message": "查询失败"})
+
 #根据主键更新房源
 @api.route("/api/v1.0/hs_edit/<int:hs_id>",methods=["PUT"])
 def update_houseresources(hs_id):
