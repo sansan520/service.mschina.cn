@@ -27,6 +27,7 @@ def insert_guestroom():
     gr_price = request.get_json().get("gr_price")
     gr_describe = request.get_json().get("gr_describe")
     gr_name = request.get_json().get("gr_name")
+    gr_status = request.get_json().get("gr_status")
 
     guestroom = GuestRoom()
     guestroom.hs_id = hs_id
@@ -34,6 +35,7 @@ def insert_guestroom():
     guestroom.gr_name = gr_name
     guestroom.gr_price = gr_price
     guestroom.gr_describe = gr_describe
+    guestroom.gr_status = gr_status
 
     try:
         db_session.add(guestroom)
@@ -62,6 +64,7 @@ def update_guestroom(gr_id):
     gr_price = request.get_json().get("gr_price")
     gr_describe = request.get_json().get("gr_describe")
     gr_name = request.get_json().get("gr_name")
+    gr_status = request.get_json().get("gr_status")
 
     try:
         db_session.query(GuestRoom).filter(GuestRoom.gr_id == gr_id).update({
@@ -69,7 +72,8 @@ def update_guestroom(gr_id):
             #"rt_id": rt_id,
             "gr_price": gr_price,
             "gr_describe": gr_describe,
-            "gr_name":gr_name
+            "gr_name":gr_name,
+            "gr_status":gr_status
         })
 
         db_session.commit()
@@ -119,12 +123,15 @@ def get_guestroom_by_hsId(hs_id):
 #     return jsonify({"code": 1, "message": [guestroom.to_json() for guestroom in room_lists]})
 
 # 查询所有客房列表,返回JSON
-@api.route("/api/v1.0/get_all_guest_room", methods=["GET"])
-def getall_guestroom():
+@api.route("/api/v1.0/get_all_guestroom", methods=["GET"])
+def get_all_guestroom():
 
-    guestroom_all = db_session.query(GuestRoom).all()
-
-    return jsonify({"code": 1, "message": [guestroom.to_json() for guestroom in guestroom_all]})
+    try:
+        guestroom_all = db_session.query(GuestRoom).all()
+        return jsonify({"code": 1, "message": [guestroom.to_json() for guestroom in guestroom_all]})
+    except:
+        return jsonify({"code":0,"message":"暂无数据"})
+    return jsonify({"code":0,"message":"查询异常"})
 #根据客房名称搜索
 @api.route("/api/v1.0/findbygrname/<string:gr_name>", methods=['GET'])
 def findbygrname(gr_name):

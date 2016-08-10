@@ -59,26 +59,31 @@ def update_houseresources(hs_id):
     user_id = request.get_json().get("user_id")
     if not user_id:
         return jsonify({"code" : 0,"message":"参数错误"})
-    ty_id = request.get_json().get("ty_id")
-    if not ty_id:
-        return jsonify({"code" : 0,"message":"参数错误"})
+    # ty_id = request.get_json().get("ty_id")
+    # if not ty_id:
+    #     return jsonify({"code" : 0,"message":"参数错误"})
+    hs_name = request.get_json().get("hs_name")
     hs_intro = request.get_json().get("hs_intro")
     hs_province = request.get_json().get("hs_province")
     hs_city = request.get_json().get("hs_city")
     hs_country = request.get_json().get("hs_country")
     hs_address = request.get_json().get("hs_address")
     hs_images = request.get_json().get("hs_images")
-    hs_hitvalume = request.get_json().get("hs_hitvalume")
+    #hs_hitvalume = request.get_json().get("hs_hitvalume")
+    hs_status = request.get_json().get("hs_status")
     try:
         db_session.query(HouseResources).filter(HouseResources.hs_id == hs_id).update({
-            "ty_id":ty_id,
+            "user_id":user_id,
+            #"ty_id":ty_id,
+            "hs_name":hs_name,
             "hs_intro" : hs_intro,
             "hs_province" : hs_province,
             "hs_city" : hs_city,
             "hs_country" : hs_country,
             "hs_address" : hs_address,
             "hs_images" : hs_images,
-            "hs_hitvalume" : hs_hitvalume
+            #"hs_hitvalume" : hs_hitvalume
+            "hs_status":hs_status
         })
         db_session.commit()
         return jsonify({"code" : 1, "message" : "更新成功"})
