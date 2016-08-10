@@ -154,11 +154,13 @@ class GuestRoom(db.Model):
 
     __tablename__ = "guestroom"
 
-    gr_id = Column('gt_id', Integer, primary_key=True)
+    gr_id = Column('gr_id', Integer, primary_key=True)
     hs_id = Column('hs_id', Integer, ForeignKey('houseresources.hs_id', ondelete='CASCADE'))
+
     gr_name = Column('gr_name', String(100))    # 客房名称
-    gr_price = Column('gt_price', DECIMAL(10, 2))
-    gr_describe = Column('gt_describe', String(500))
+    gr_price = Column('gr_price', DECIMAL(10, 2))
+    gr_desc = Column('gr_desc', String(500))   # 简单描述:如几张床,是否有独立卫浴等;
+    gr_images = Column('gr_images', String(500))
 
     gr_createtime = Column('gr_createtime',DateTime,default=datetime.datetime.now())
     gr_modifytime = Column('gr_modifytiem',DateTime,default=datetime.datetime.now())
@@ -169,7 +171,8 @@ class GuestRoom(db.Model):
             'hs_id': self.hs_id,
             'gr_name':self.gr_name,
             'gr_price': self.gr_price,
-            'gr_describe': self.gr_describe
+            'gr_describe': self.gr_describe,
+            'gr_images':self.gr_images
         }
 
 if __name__ == '__main__':
