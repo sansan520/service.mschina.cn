@@ -172,8 +172,17 @@ class GuestRoom(db.Model):
             'gr_name':self.gr_name,
             'gr_price': self.gr_price,
             'gr_describe': self.gr_describe,
-            'gr_images':self.gr_images
+            'gr_images':self.gr_images,
+            'gr_status':self.gr_status
         }
+
+class DeleteImages(db.Model):
+
+    __tablename__ = "deleteimages"
+
+    id = Column('id', Integer, primary_key=True)
+    image = Column('image', String(100))
+
 
 if __name__ == '__main__':
     db.create_all()
