@@ -161,7 +161,7 @@ class GuestRoom(db.Model):
     gr_price = Column('gr_price', DECIMAL(10, 2))
     gr_desc = Column('gr_desc', String(500))   # 简单描述:如几张床,是否有独立卫浴等;
     gr_images = Column('gr_images', String(500))
-
+    gr_status = Column('gr_status', Integer)    # 0 表示暂停发布,装修等,1 表示正常使用
     gr_createtime = Column('gr_createtime',DateTime,default=datetime.datetime.now())
     gr_modifytime = Column('gr_modifytiem',DateTime,default=datetime.datetime.now())
 
