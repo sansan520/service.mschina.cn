@@ -53,7 +53,7 @@ def get_houseresources_by_hs_id(hs_id):
 #根据主键更新房源
 @api.route("/api/v1.0/hs_edit/<int:hs_id>",methods=["PUT"])
 def update_houseresources(hs_id):
-    hs_id = request.get_json().get("hs_id")
+    #hs_id = request.get_json().get("hs_id")
     if not hs_id:
         return  jsonify({"code":0,"message":"房源不存在"})
     user_id = request.get_json().get("user_id")
