@@ -28,6 +28,7 @@ def insert_guestroom():
     gr_describe = request.get_json().get("gr_describe")
     gr_name = request.get_json().get("gr_name")
     gr_status = request.get_json().get("gr_status")
+    gr_images = request.get_json().get("gr_images")
 
     guestroom = GuestRoom()
     guestroom.hs_id = hs_id
@@ -36,6 +37,7 @@ def insert_guestroom():
     guestroom.gr_price = gr_price
     guestroom.gr_describe = gr_describe
     guestroom.gr_status = gr_status
+    guestroom.gr_images = gr_images
 
     try:
         db_session.add(guestroom)
@@ -65,6 +67,7 @@ def update_guestroom(gr_id):
     gr_describe = request.get_json().get("gr_describe")
     gr_name = request.get_json().get("gr_name")
     gr_status = request.get_json().get("gr_status")
+    gr_images = request.get_json().get("gr_images")
 
     try:
         db_session.query(GuestRoom).filter(GuestRoom.gr_id == gr_id).update({
@@ -73,7 +76,8 @@ def update_guestroom(gr_id):
             "gr_price": gr_price,
             "gr_describe": gr_describe,
             "gr_name":gr_name,
-            "gr_status":gr_status
+            "gr_status":gr_status,
+            "gr_images":gr_images
         })
 
         db_session.commit()
@@ -100,6 +104,18 @@ def delete_guestroom(gr_id):
         db_session.rollback()
 
     return jsonify({"code": 0, "message": "客房删除失败"})
+
+
+#根据客户主键查询客房
+@api.route("/api/v1.0/get_guestroom_by_gr_id/<int:gr_id>",methods=['GET'])
+def get_guestroom_by_gr_id(gr_id):
+    try:
+        entity = db_session.query(GuestRoom).filter(GuestRoom.gr_id == gr_id).first()
+        return jsonify({"code":1,"message":[entity.to_json]})
+    except:
+        return jsonify({"code":0,"message":"查询失败"})
+    return jsonify({"code":0,"message":"查询异常"})
+
 
 
 # 根据房源类型,查询所有客房列表,返回JSON
