@@ -12,17 +12,9 @@ from sqlalchemy import exc
 @api.route("/api/v1.0/gr_insert", methods=["POST"])
 def insert_guestroom():
 
-    # hs_id = Column('hs_id', Integer, ForeignKey('houseresources.hs_id', ondelete='CASCADE'))
-    # rt_id = Column('rt_id', Integer)
-    # gt_price = Column('gt_price', DECIMAL(10, 2))
-    # gt_describe = Column('gt_describe', String(500))
-
     hs_id = request.get_json().get("hs_id")
     if not hs_id:
         return jsonify({"code": 0, "message": "参数错误"})
-    # rt_id = request.get_json().get("rt_id")
-    # if not rt_id:
-    #     return jsonify({"code": 0, "message": "参数错误"})
 
     gr_price = request.get_json().get("gr_price")
     gr_desc = request.get_json().get("gr_desc")
@@ -126,7 +118,8 @@ def get_guestroom_by_hsId(hs_id):
 
     room_lists = db_session.query(GuestRoom).filter(GuestRoom.hs_id == hs_id).all()
 
-    return jsonify({"code": 1, "message": [guestroom.to_json() for guestroom in room_lists]})
+    return jsonify({"code": 1, "message": [entity.to_json() for entity in room_lists]})
+
 
 # 根据房间类型,查询所有客房列表,返回JSON
 # @api.route("/api/v1.0/get_guestroom_by_rtId/<int:rt_id>", methods=["GET"])
@@ -145,6 +138,7 @@ def get_all_guestroom():
     try:
         guestroom_all = db_session.query(GuestRoom).all()
         return jsonify({"code": 1, "message": [guestroom.to_json() for guestroom in guestroom_all]})
+
     except:
         return jsonify({"code":0,"message":"暂无数据"})
     return jsonify({"code":0,"message":"查询异常"})

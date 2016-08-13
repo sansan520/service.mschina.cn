@@ -170,10 +170,11 @@ class GuestRoom(db.Model):
             'gr_id': self.gr_id,
             'hs_id': self.hs_id,
             'gr_name':self.gr_name,
-            'gr_price': self.gr_price,
+            'gr_price': float(self.gr_price),
+            'gr_modifytime':self.gr_modifytime.strftime('%Y-%m-%d %H:%M:%S'),
             'gr_desc': self.gr_desc,
             'gr_images':self.gr_images
-            #'gr_status':self.gr_status
+            # 'gr_status':self.gr_status
         }
 
 class DeleteImages(db.Model):
