@@ -25,9 +25,9 @@ def insert_guestroom():
     #     return jsonify({"code": 0, "message": "参数错误"})
 
     gr_price = request.get_json().get("gr_price")
-    gr_describe = request.get_json().get("gr_describe")
+    gr_desc = request.get_json().get("gr_desc")
     gr_name = request.get_json().get("gr_name")
-    gr_status = request.get_json().get("gr_status")
+    #gr_status = request.get_json().get("gr_status")
     gr_images = request.get_json().get("gr_images")
 
     guestroom = GuestRoom()
@@ -35,8 +35,8 @@ def insert_guestroom():
     #guestroom.rt_id = rt_id
     guestroom.gr_name = gr_name
     guestroom.gr_price = gr_price
-    guestroom.gr_describe = gr_describe
-    guestroom.gr_status = gr_status
+    guestroom.gr_des = gr_desc
+    #guestroom.gr_status = gr_status
     guestroom.gr_images = gr_images
 
     try:
@@ -64,9 +64,9 @@ def update_guestroom(gr_id):
     #     return jsonify({"code": 0, "message": "参数错误"})
 
     gr_price = request.get_json().get("gr_price")
-    gr_describe = request.get_json().get("gr_describe")
+    gr_desc = request.get_json().get("gr_desc")
     gr_name = request.get_json().get("gr_name")
-    gr_status = request.get_json().get("gr_status")
+    #gr_status = request.get_json().get("gr_status")
     gr_images = request.get_json().get("gr_images")
 
     try:
@@ -74,9 +74,9 @@ def update_guestroom(gr_id):
             "hs_id": hs_id,
             #"rt_id": rt_id,
             "gr_price": gr_price,
-            "gr_describe": gr_describe,
+            "gr_desc": gr_desc,
             "gr_name":gr_name,
-            "gr_status":gr_status,
+            #"gr_status":gr_status,
             "gr_images":gr_images
         })
 
