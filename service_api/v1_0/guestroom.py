@@ -103,7 +103,7 @@ def delete_guestroom(gr_id):
 def get_guestroom_by_gr_id(gr_id):
     try:
         entity = db_session.query(GuestRoom).filter(GuestRoom.gr_id == gr_id).first()
-        return jsonify({"code":1,"message":[entity.to_json]})
+        return jsonify({"code":1,"message":entity.to_json()})
     except:
         return jsonify({"code":0,"message":"查询失败"})
     return jsonify({"code":0,"message":"查询异常"})
