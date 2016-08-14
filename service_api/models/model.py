@@ -90,7 +90,7 @@ class HouseType(db.Model):
 
     __tablename__ = "housetype"
 
-    ty_id = Column('ty_id', Integer, primary_key=True)
+    ty_id = Column('ty_id', Integer, primary_key=True,autoincrement=True)
     ty_name = Column('ty_name', String(45), nullable=False)
     ty_valume =Column('ty_valume', Integer, default=0)
 
@@ -109,7 +109,7 @@ class HouseResources(db.Model):
 
     __tablename__ = "houseresources"
 
-    hs_id = Column('hs_id', Integer, primary_key=True)
+    hs_id = Column('hs_id', Integer, primary_key=True,autoincrement=True)
     ty_id = Column('ty_id', Integer, ForeignKey('housetype.ty_id'))
     user_id = Column('user_id', Integer, ForeignKey('userbase.user_id', ondelete='CASCADE'))
     hs_name = Column('hs_name', String(20))   # 房源名称
@@ -123,6 +123,8 @@ class HouseResources(db.Model):
     hs_status = Column('hs_status',Integer)  #  房源状态, 0 表示暂停营业,1 表示正常营业
     hs_createtime = Column('hs_createtime', DateTime, default=datetime.datetime.now())
     hs_modifytime = Column('hs_modifytime', DateTime, default=datetime.datetime.now())
+
+    guestroom = db.relationship("GuestRoom",backref="houseresources",lazy="dynamic")
 
     def to_json(self):
         return {
@@ -154,14 +156,14 @@ class GuestRoom(db.Model):
 
     __tablename__ = "guestroom"
 
-    gr_id = Column('gr_id', Integer, primary_key=True)
+    gr_id = Column('gr_id', Integer, primary_key=True,autoincrement=True)
     hs_id = Column('hs_id', Integer, ForeignKey('houseresources.hs_id', ondelete='CASCADE'))
 
     gr_name = Column('gr_name', String(100))    # 客房名称
     gr_price = Column('gr_price', DECIMAL(10, 2))
     gr_desc = Column('gr_desc', String(500))   # 简单描述:如几张床,是否有独立卫浴等;
     gr_images = Column('gr_images', String(500))
-    #gr_status = Column('gr_status', Integer)    # 0 表示暂停发布,装修等,1 表示正常使用
+    gr_status = Column('gr_status', Integer)    # 0 表示暂停发布,装修等,1 表示正常使用
     gr_createtime = Column('gr_createtime',DateTime,default=datetime.datetime.now())
     gr_modifytime = Column('gr_modifytiem',DateTime,default=datetime.datetime.now())
 
@@ -173,8 +175,8 @@ class GuestRoom(db.Model):
             'gr_price': float(self.gr_price),
             'gr_modifytime':self.gr_modifytime.strftime('%Y-%m-%d %H:%M:%S'),
             'gr_desc': self.gr_desc,
-            'gr_images':self.gr_images
-            # 'gr_status':self.gr_status
+            'gr_images':self.gr_images,
+            'gr_status':self.gr_status
         }
 
 class DeleteImages(db.Model):

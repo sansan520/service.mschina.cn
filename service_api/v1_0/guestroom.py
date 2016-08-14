@@ -19,7 +19,7 @@ def insert_guestroom():
     gr_price = request.get_json().get("gr_price")
     gr_desc = request.get_json().get("gr_desc")
     gr_name = request.get_json().get("gr_name")
-    #gr_status = request.get_json().get("gr_status")
+    gr_status = request.get_json().get("gr_status")
     gr_images = request.get_json().get("gr_images")
 
     guestroom = GuestRoom()
@@ -27,8 +27,8 @@ def insert_guestroom():
     #guestroom.rt_id = rt_id
     guestroom.gr_name = gr_name
     guestroom.gr_price = gr_price
-    guestroom.gr_des = gr_desc
-    #guestroom.gr_status = gr_status
+    guestroom.gr_desc = gr_desc
+    guestroom.gr_status = gr_status
     guestroom.gr_images = gr_images
 
     try:
@@ -58,7 +58,7 @@ def update_guestroom(gr_id):
     gr_price = request.get_json().get("gr_price")
     gr_desc = request.get_json().get("gr_desc")
     gr_name = request.get_json().get("gr_name")
-    #gr_status = request.get_json().get("gr_status")
+    gr_status = request.get_json().get("gr_status")
     gr_images = request.get_json().get("gr_images")
 
     try:
@@ -68,7 +68,7 @@ def update_guestroom(gr_id):
             "gr_price": gr_price,
             "gr_desc": gr_desc,
             "gr_name":gr_name,
-            #"gr_status":gr_status,
+            "gr_status":gr_status,
             "gr_images":gr_images
         })
 
