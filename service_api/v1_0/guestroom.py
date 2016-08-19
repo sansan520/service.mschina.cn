@@ -62,7 +62,9 @@ def update_guestroom(gr_id):
     gr_name = request.get_json().get("gr_name")
     gr_status = request.get_json().get("gr_status")
     gr_images = request.get_json().get("gr_images")
-
+    gr_windows =request.get_json().get("gr_windows")
+    gr_breakfast = request.get_json().get("gr_breakfast")
+    gr_settings = request.get_json().get("gr_settings")
     try:
         db_session.query(GuestRoom).filter(GuestRoom.gr_id == gr_id).update({
             "hs_id": hs_id,
@@ -75,6 +77,8 @@ def update_guestroom(gr_id):
             "gr_room_area":gr_room_area,
             "gr_bed_type":gr_bed_type,
             "gr_bed_count":gr_bed_count,
+            "gr_windows":gr_windows,
+            "gr_breakfast":gr_breakfast,
             "gr_settings":gr_settings
         })
 

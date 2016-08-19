@@ -170,6 +170,8 @@ class GuestRoom(db.Model):
     gr_room_area = Column('gr_room_area', Integer)  # 面积:30 (平方米)
     gr_bed_type = Column('gr_bed_type', String(50)) # 单人床
     gr_bed_count = Column('gr_bed_count', Integer)
+    gr_windows = Column('gr_windows', Integer)
+    gr_breakfast = Column('gr_breakfast', Integer)
     gr_settings = Column('gr_settings', String(500))
 
 
@@ -186,7 +188,9 @@ class GuestRoom(db.Model):
             'gr_room_area': self.gr_room_area,
             'gr_bed_type': self.gr_bed_type,
             'gr_bed_count': self.gr_bed_count,
-            'gr_settings': self.gr_settings,
+            'gr_windows': self.gr_windows,
+            'gr_breakfast': self.gr_breakfast,
+            'gr_settings': self.gr_settings
         }
 
 class DeleteImages(db.Model):
