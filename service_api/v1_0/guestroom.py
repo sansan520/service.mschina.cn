@@ -24,12 +24,17 @@ def insert_guestroom():
 
     guestroom = GuestRoom()
     guestroom.hs_id = hs_id
-    #guestroom.rt_id = rt_id
     guestroom.gr_name = gr_name
     guestroom.gr_price = gr_price
     guestroom.gr_desc = gr_desc
     guestroom.gr_status = gr_status
     guestroom.gr_images = gr_images
+    # 添加详细信息
+    guestroom.gr_room_type = request.get_json().get("gr_room_type")
+    guestroom.gr_room_area=request.get_json().get("gr_room_area")
+    guestroom.gr_bed_type = request.get_json().get("gr_bed_type")
+    guestroom.gr_bed_count = request.get_json().get("gr_bed_count")
+    guestroom.gr_settings = request.get_json().get("gr_settings")
 
     try:
         db_session.add(guestroom)
@@ -51,9 +56,6 @@ def update_guestroom(gr_id):
     hs_id = request.get_json().get("hs_id")
     if not hs_id:
         return jsonify({"code": 0, "message": "参数错误"})
-    # rt_id = request.get_json().get("rt_id")
-    # if not rt_id:
-    #     return jsonify({"code": 0, "message": "参数错误"})
 
     gr_price = request.get_json().get("gr_price")
     gr_desc = request.get_json().get("gr_desc")
@@ -64,12 +66,16 @@ def update_guestroom(gr_id):
     try:
         db_session.query(GuestRoom).filter(GuestRoom.gr_id == gr_id).update({
             "hs_id": hs_id,
-            #"rt_id": rt_id,
             "gr_price": gr_price,
             "gr_desc": gr_desc,
             "gr_name":gr_name,
             "gr_status":gr_status,
-            "gr_images":gr_images
+            "gr_images":gr_images,
+            "gr_room_type":gr_room_type,
+            "gr_room_area":gr_room_area,
+            "gr_bed_type":gr_bed_type,
+            "gr_bed_count":gr_bed_count,
+            "gr_settings":gr_settings
         })
 
         db_session.commit()

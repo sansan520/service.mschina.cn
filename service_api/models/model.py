@@ -148,21 +148,30 @@ class HouseResources(db.Model):
 #     rt_name = Column('rt_name', String(50), nullable=False)
 
 
-
+# 客房表
 class GuestRoom(db.Model):
 
     __tablename__ = "guestroom"
 
+    # 客房基本信息
     gr_id = Column('gr_id', Integer, primary_key=True, autoincrement=True)
     hs_id = Column('hs_id', Integer, ForeignKey('houseresources.hs_id', ondelete='CASCADE'))
 
     gr_name = Column('gr_name', String(100))    # 客房名称
     gr_price = Column('gr_price', DECIMAL(10, 2))
-    gr_desc = Column('gr_desc', String(500))   # 简单描述:如几张床,是否有独立卫浴等;
+    gr_desc = Column('gr_desc', String(500))   # 简单描述
     gr_images = Column('gr_images', String(500))
-    #gr_status = Column('gr_status', Integer)    # 0 表示暂停发布,装修等,1 表示正常使用
+    gr_status = Column('gr_status', Integer)    #admin:0表示审核中,1 正常(审核通过),2 房东停止发布
     gr_createtime = Column('gr_createtime',DateTime,default=datetime.datetime.now())
     gr_modifytime = Column('gr_modifytiem',DateTime,default=datetime.datetime.now())
+
+    # 详细信息
+    gr_room_type = Column('gr_room_type', Integer)  # 1,2,...6 人间
+    gr_room_area = Column('gr_room_area', Integer)  # 面积:30 (平方米)
+    gr_bed_type = Column('gr_bed_type', String(50)) # 单人床
+    gr_bed_count = Column('gr_bed_count', Integer)
+    gr_settings = Column('gr_settings', String(500))
+
 
     def to_json(self):
         return {
@@ -172,8 +181,12 @@ class GuestRoom(db.Model):
             'gr_price': float(self.gr_price),
             'gr_modifytime':self.gr_modifytime.strftime('%Y-%m-%d %H:%M:%S'),
             'gr_desc': self.gr_desc,
-            'gr_images':self.gr_images
-            # 'gr_status':self.gr_status
+            'gr_images':self.gr_images,
+            'gr_room_type':self.gr_room_type,
+            'gr_room_area': self.gr_room_area,
+            'gr_bed_type': self.gr_bed_type,
+            'gr_bed_count': self.gr_bed_count,
+            'gr_settings': self.gr_settings,
         }
 
 class DeleteImages(db.Model):
