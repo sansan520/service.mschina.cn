@@ -193,6 +193,33 @@ class GuestRoom(db.Model):
             'gr_settings': self.gr_settings
         }
 
+
+# 客房预订表
+class Reserve(db.Model):
+
+    __tablename__ = "reserve"
+
+    id = Column('id',Integer,primary_key=True,autoincrement=True)
+    gr_id = Column('gr_id',Integer,ForeignKey('guestroom.gr_id'),nullable=False)
+    user_id = Column('user_id',Integer,ForeignKey('userbase.user_id'),nullable=False)
+    start_time = Column('start_time',DateTime)
+    end_time = Column('end_time',DateTime)
+    status = Column('status',Integer,nullable=False)  # 订单状态 0 已取消(退订) 1 预订 2 房东确认
+    create_time = Column('create_time', DateTime,default=datetime.datetime.now())
+    modify_time = Column('modify_time',DateTime,default=datetime.datetime.now())
+
+    def to_json(self):
+        return {
+            'id': self.id,
+            'gr_id': self.gr_id,
+            'user_id': self.user_id,
+            'start_time': self.start_time.strftime('%Y-%m-%d %H:%M:%S'),
+            'end_time': self.end_time.strftime('%Y-%m-%d %H:%M:%S'),
+            'status': self.status,
+            'create_time': self.gr_images.strftime('%Y-%m-%d %H:%M:%S'),
+            'modify_time':self.modify_time.strftime('%Y-%m-%d %H:%M:%S')
+        }
+
 class DeleteImages(db.Model):
 
     __tablename__ = "deleteimages"
