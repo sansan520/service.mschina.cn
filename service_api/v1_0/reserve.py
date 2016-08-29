@@ -37,7 +37,7 @@ def insert_reserve():
 
 # 更新预订状态
 @api.route("/api/v1.0/update_reserve/<int:id>", methods=["PUT"])
-def insert_reserve(id):
+def update_reserve(id):
     start_time = request.get_json().get("start_time")
     end_time = request.get_json().get("end_time")
     status = request.get_json().get("status")
