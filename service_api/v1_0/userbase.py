@@ -160,3 +160,41 @@ def getbyaccount(user_account):
     except:
         return jsonify({"code": 0,"message":"该账号不存在"})
     return jsonify({"code":0,"message":"查询异常"})
+
+
+@api.route("/api/v1.0/get_all_users/<int:page>")
+def get_all_users(page=1):
+    pagesize = 6
+    pagination = UserBase.query.order_by(UserBase.user_id.desc()).paginate(page, per_page=pagesize, error_out=False)
+
+    entities = pagination.items
+    pages = pagination.pages  # 总页数
+    total = pagination.total  # 总记录数
+    return jsonify(
+        {"code": 1, "page": page, "pages": pages, "total": total, "message": [entity.to_json() for entity in entities]})
+    return jsonify({"code":0,"message":"查询异常"})
+
+
+#根据主键修改用户信息
+@api.route("/api/v1.0/update_userBaseById/<int:user_id>",methods=["PUT"])
+def update_userBaseById(user_id):
+    # user_id = request.get_json().get("user_id")
+    if not user_id:
+        return jsonify({"code" : 0,"message":"参数错误"})
+    user_account = request.get_json().get("user_account")
+    user_password =request.get_json().get("user_password")
+    user_mobile = request.get_json().get("user_mobile")
+    user_type = request.get_json().get("user_type")
+
+    try:
+        db_session.query(UserBase).filter(UserBase.user_id == user_id).update({
+            "user_account":user_account,
+            "user_mobile" : user_mobile,
+            "user_password": user_password,
+            "user_type": user_type
+        })
+        db_session.commit()
+        return jsonify({"code" : 1, "message" : "更新成功"})
+    except exc.IntegrityError:
+        db_session.rollback()
+    return jsonify({"code":0,"message":"更新失败"})
