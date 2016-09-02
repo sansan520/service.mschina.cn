@@ -23,7 +23,7 @@ manager = Manager(app)
 manager.add_command('db', MigrateCommand)
 
 engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'], pool_recycle=7200)
-db_session = scoped_session(sessionmaker(autocommit=False, autoflush=False, bind=engine))
+db_session = scoped_session(sessionmaker(autocommit=False, autoflush=True, bind=engine))
 
 # 会员基础表(游客/房东公共部分)
 class UserBase(db.Model):
@@ -53,8 +53,8 @@ class UserBase(db.Model):
             'user_headimg': self.user_headimg,
             'user_type': self.user_type,
             'user_status':self.user_status,
-            'user_createtime':self.user_createtime,
-            'user_modifytime':self.user_modifytime
+            'user_createtime':self.user_createtime.strftime('%Y-%m-%d %H:%M:%S'),
+            'user_modifytime':self.user_modifytime.strftime('%Y-%m-%d %H:%M:%S')
         }
 
 # 房东表(用户扩展表,若想成为房东就需要提供更多资料)

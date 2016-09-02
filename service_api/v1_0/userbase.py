@@ -1,12 +1,13 @@
 # coding:utf-8
 
 import hashlib
-import datetime
+import time
 from functools import wraps
 from flask import jsonify, request, g, current_app
 from service_api.models.model import UserBase,HouseOwner, db_session
 from sqlalchemy import exc
 from . import api
+from flask_sqlalchemy import BaseQuery
 
 #http://www.cnblogs.com/melonjiang/p/5342505.html
 # http://redis.readthedocs.io/en/2.4/hash.html
@@ -165,8 +166,13 @@ def getbyaccount(user_account):
 
 @api.route("/api/v1.0/get_all_users/<int:page>")
 def get_all_users(page=1):
-    pagesize = 6
-    pagination = UserBase.query.order_by(UserBase.user_id.desc()).paginate(page, per_page=pagesize, error_out=False)
+    pagesize = 10
+
+    #populate_existing()
+    #db_session.refresh(db_session.query(UserBase).filter(UserBase.user_id == 11).one())
+    db_session.flush()
+    baseQuery = UserBase.query.order_by(UserBase.user_id.desc())#.paginate(page, per_page=pagesize,error_out=false)
+    pagination = baseQuery.paginate(page, per_page=pagesize)
 
     entities = pagination.items
     pages = pagination.pages  # 总页数
@@ -179,7 +185,6 @@ def get_all_users(page=1):
 #根据主键修改用户信息
 @api.route("/api/v1.0/update_userBaseById/<int:user_id>",methods=["PUT"])
 def update_userBaseById(user_id):
-    # user_id = request.get_json().get("user_id")
     if not user_id:
         return jsonify({"code" : 0,"message":"参数错误"})
     user_account = request.get_json().get("user_account")
@@ -194,7 +199,7 @@ def update_userBaseById(user_id):
             "user_password": user_password,
             "user_type": user_type,
             "user_status":user_status,
-            "user_modifytime":datetime.datetime.now
+            "user_modifytime":time.strftime('%Y-%m-%d %H:%M:%S')
         })
         db_session.commit()
         return jsonify({"code" : 1, "message" : "更新成功"})
@@ -207,9 +212,27 @@ def delete_user_ById(user_id):
     if not user_id:
         return jsonify({"code": 0, "message": "参数错误"})
     try:
-        db_session.query(UserBase).filter(UserBase.user_id == user_id).delete()
+        db_session.query(UserBase).filter(UserBase.user_id == user_id).update({
+            "user_status": 0,
+            "user_modifytime":time.strftime('%Y-%m-%d %H:%M:%S')
+        })
         db_session.commit()
         return jsonify({"code": 1, "message": "删除成功"})
     except exc.IntegrityError:
         db_session.rollback()
     return jsonify({"code":0,"message":"删除失败"})
+
+@api.route("/api/v1.0/reUse_ById/<int:user_id>",methods = ["PUT"])
+def reUse_ById(user_id):
+    if not user_id:
+        return jsonify({"code": 0, "message": "参数错误"})
+    try:
+        db_session.query(UserBase).filter(UserBase.user_id == user_id).update({
+            "user_status": 1,
+            "user_modifytime": time.strftime('%Y-%m-%d %H:%M:%S')
+        })
+        db_session.commit()
+        return jsonify({"code": 1, "message": "启用成功"})
+    except exc.IntegrityError:
+        db_session.rollback()
+    return jsonify({"code": 0, "message": "启用失败"})
