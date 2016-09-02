@@ -1,7 +1,7 @@
 # coding:utf-8
 
 import hashlib
-import time
+import datetime
 from functools import wraps
 from flask import jsonify, request, g, current_app
 from service_api.models.model import UserBase,HouseOwner, db_session
@@ -84,7 +84,7 @@ def user_register():
     userbase.user_mobile = user_mobile
     userbase.user_type = user_type
     userbase.user_headimg = user_headimg
-
+    userbase.user_status = 1  # 注册之后默认为1 正常
     try:
         db_session.add(userbase)
         db_session.commit()
@@ -123,6 +123,7 @@ def ho_register():
     house_owner.ho_tel = ho_tel
     house_owner.ho_nicard = ho_nicard
     house_owner.ho_email = ho_email
+
     try:
         db_session.add(house_owner)
         db_session.commit()
@@ -185,16 +186,30 @@ def update_userBaseById(user_id):
     user_password =request.get_json().get("user_password")
     user_mobile = request.get_json().get("user_mobile")
     user_type = request.get_json().get("user_type")
-
+    user_status = request.get_json().get("user_status")
     try:
         db_session.query(UserBase).filter(UserBase.user_id == user_id).update({
             "user_account":user_account,
             "user_mobile" : user_mobile,
             "user_password": user_password,
-            "user_type": user_type
+            "user_type": user_type,
+            "user_status":user_status,
+            "user_modifytime":datetime.datetime.now
         })
         db_session.commit()
         return jsonify({"code" : 1, "message" : "更新成功"})
     except exc.IntegrityError:
         db_session.rollback()
     return jsonify({"code":0,"message":"更新失败"})
+
+@api.route("/api/v1.0/delete_user_ById/<int:user_id>",methods = ["DELETE"])
+def delete_user_ById(user_id):
+    if not user_id:
+        return jsonify({"code": 0, "message": "参数错误"})
+    try:
+        db_session.query(UserBase).filter(UserBase.user_id == user_id).delete()
+        db_session.commit()
+        return jsonify({"code": 1, "message": "删除成功"})
+    except exc.IntegrityError:
+        db_session.rollback()
+    return jsonify({"code":0,"message":"删除失败"})
