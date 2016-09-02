@@ -20,7 +20,8 @@ def user_login():
     user_account = request.json["user_account"]
     user_password = request.json["user_password"]
 
-    userbase = db_session.query(UserBase).filter(UserBase.user_account == user_account).first()
+    #userbase = db_session.query(UserBase).filter(UserBase.user_account == user_account).first()
+    userbase = UserBase.query.filter(UserBase.user_account == user_account).first()
     if not userbase:
         return jsonify({'code': 0, 'message': '没有此用户'})
 
@@ -147,7 +148,8 @@ def ho_register():
 @api.route("/api/v1.0/get_by_mobile/<string:user_mobile>",methods=["GET"])
 def getbymobile(user_mobile):
     try:
-        entity = db_session.query(UserBase).filter(UserBase.user_mobile == user_mobile).one()
+        #entity = db_session.query(UserBase).filter(UserBase.user_mobile == user_mobile).one()
+        entity = UserBase.query.filter(UserBase.user_mobile == user_mobile).one()
         return jsonify({"code": 1, "message": [entity.to_json()]})
     except:
         return jsonify({"code": 0, "message": "该手机号不存在"})
@@ -157,7 +159,8 @@ def getbymobile(user_mobile):
 @api.route("/api/v1.0/get_by_account/<string:user_account>",methods=["GET"])
 def getbyaccount(user_account):
     try:
-        entity = db_session.query(UserBase).filter(UserBase.user_account == user_account).one()
+        #entity = db_session.query(UserBase).filter(UserBase.user_account == user_account).one()
+        entity = UserBase.query.filter(UserBase.user_account == user_account).one()
         return jsonify({"code": 1, "message": [entity.to_json()]})
     except:
         return jsonify({"code": 0,"message":"该账号不存在"})
@@ -193,7 +196,16 @@ def update_userBaseById(user_id):
     user_type = request.get_json().get("user_type")
     user_status = request.get_json().get("user_status")
     try:
-        db_session.query(UserBase).filter(UserBase.user_id == user_id).update({
+        # 使用flask-SqlAlchemy model.query.update解决paginate分页数据不能及时更新的问题
+        # db_session.query(UserBase).filter(UserBase.user_id == user_id).update({
+        #     "user_account":user_account,
+        #     "user_mobile" : user_mobile,
+        #     "user_password": user_password,
+        #     "user_type": user_type,
+        #     "user_status":user_status,
+        #     "user_modifytime":time.strftime('%Y-%m-%d %H:%M:%S')
+        # })
+        UserBase.query.filter(UserBase.user_id == user_id).update({
             "user_account":user_account,
             "user_mobile" : user_mobile,
             "user_password": user_password,
@@ -212,9 +224,13 @@ def delete_user_ById(user_id):
     if not user_id:
         return jsonify({"code": 0, "message": "参数错误"})
     try:
-        db_session.query(UserBase).filter(UserBase.user_id == user_id).update({
+        # db_session.query(UserBase).filter(UserBase.user_id == user_id).update({
+        #     "user_status": 0,
+        #     "user_modifytime":time.strftime('%Y-%m-%d %H:%M:%S')
+        # })
+        UserBase.query.filter(UserBase.user_id == user_id).update({
             "user_status": 0,
-            "user_modifytime":time.strftime('%Y-%m-%d %H:%M:%S')
+            "user_modifytime": time.strftime('%Y-%m-%d %H:%M:%S')
         })
         db_session.commit()
         return jsonify({"code": 1, "message": "删除成功"})
@@ -227,7 +243,11 @@ def reUse_ById(user_id):
     if not user_id:
         return jsonify({"code": 0, "message": "参数错误"})
     try:
-        db_session.query(UserBase).filter(UserBase.user_id == user_id).update({
+        # db_session.query(UserBase).filter(UserBase.user_id == user_id).update({
+        #     "user_status": 1,
+        #     "user_modifytime": time.strftime('%Y-%m-%d %H:%M:%S')
+        # })
+        UserBase.query.filter(UserBase.user_id == user_id).update({
             "user_status": 1,
             "user_modifytime": time.strftime('%Y-%m-%d %H:%M:%S')
         })
