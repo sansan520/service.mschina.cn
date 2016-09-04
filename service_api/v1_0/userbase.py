@@ -166,15 +166,12 @@ def getbyaccount(user_account):
         return jsonify({"code": 0,"message":"该账号不存在"})
     return jsonify({"code":0,"message":"查询异常"})
 
-
+# 获取所有普通会员用户分页列表
 @api.route("/api/v1.0/get_all_users/<int:page>")
 def get_all_users(page=1):
     pagesize = 10
-
-    #populate_existing()
-    #db_session.refresh(db_session.query(UserBase).filter(UserBase.user_id == 11).one())
-    db_session.flush()
-    baseQuery = UserBase.query.order_by(UserBase.user_id.desc())#.paginate(page, per_page=pagesize,error_out=false)
+    #db_session.flush()
+    baseQuery = UserBase.query.filter(UserBase.user_type == 1).order_by(UserBase.user_id.desc())#.paginate(page, per_page=pagesize,error_out=false)
     pagination = baseQuery.paginate(page, per_page=pagesize)
 
     entities = pagination.items

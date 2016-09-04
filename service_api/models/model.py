@@ -57,13 +57,29 @@ class UserBase(db.Model):
             'user_modifytime':self.user_modifytime.strftime('%Y-%m-%d %H:%M:%S')
         }
 
+class UserBase_Ext(UserBase):
+    ho_id = Column('ho_id', Integer)
+    def to_json(self):
+        return {
+            'user_id': self.user_id,
+            'user_account': self.user_account,
+            'user_password': self.user_password,
+            'user_mobile': self.user_mobile,
+            'user_headimg': self.user_headimg,
+            'user_type': self.user_type,
+            'user_status': self.user_status,
+            'user_createtime': self.user_createtime.strftime('%Y-%m-%d %H:%M:%S'),
+            'user_modifytime': self.user_modifytime.strftime('%Y-%m-%d %H:%M:%S'),
+            'ho_id':self.ho_id
+        }
+
 # 房东表(用户扩展表,若想成为房东就需要提供更多资料)
 class HouseOwner(db.Model):
 
     __tablename__ = 'houseowner'
 
     ho_id = Column('ho_id', Integer, primary_key=True, autoincrement=True)
-    user_id = Column('user_id', Integer, ForeignKey('userbase.user_id'))   # 外键
+    user_id = Column('user_id', Integer, ForeignKey('userbase.user_id'))   # 外键,唯一键unique=true
     ho_name = Column('ho_name', String(45), index=True, nullable=False)   # 真实姓名
     ho_tel = Column('ho_tel', String(45))    # 家庭电话
     ho_email = Column('ho_email', String(45))   # 邮箱
