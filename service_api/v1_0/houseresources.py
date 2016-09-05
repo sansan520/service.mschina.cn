@@ -155,7 +155,7 @@ def goden_resources_4_index():
     return jsonify({"code": 1, "message": [entity.to_json() for entity in entities]})
 
 
-#  分页查询  http://www.cnblogs.com/agmcs/p/4445583.html
+#  分页查询 - 用于website (pagesize>10) http://www.cnblogs.com/agmcs/p/4445583.html
 @api.route("/api/v1.0/get_res_page/<int:page>")
 def get_res_page(page=1):
     pagesize = 6
@@ -165,7 +165,20 @@ def get_res_page(page=1):
 
     pages = pagination.pages  # 总页数
     total = pagination.total  # 总记录数
-    # return jsonify({"code": 1})
+
+    return jsonify({"code": 1, "page": page, "pages": pages, "total": total, "message": [entity.to_json() for entity in entities]})
+
+#  分页查询 - 用户admin
+@api.route("/api/v1.0/get_all_houses/<int:page>")
+def get_all_houses(page=1):
+    pagesize = 10
+    pagination = HouseResources.query.order_by(HouseResources.hs_id.desc()).paginate(page, per_page=pagesize, error_out=False)
+
+    entities = pagination.items
+
+    pages = pagination.pages  # 总页数
+    total = pagination.total  # 总记录数
+
     return jsonify({"code": 1, "page": page, "pages": pages, "total": total, "message": [entity.to_json() for entity in entities]})
 
 #按省来查询

@@ -27,7 +27,18 @@ def insert_housetype():
 
     return jsonify({"code": 0, "message": "类型添加失败"})
 
+#  分页查询 - 用户admin
+@api.route("/api/v1.0/get_all_hs_type/<int:page>")
+def get_all_houses(page=1):
+    pagesize = 10
+    pagination = HouseType.query.order_by(HouseType.ty_id.desc()).paginate(page, per_page=pagesize, error_out=False)
 
+    entities = pagination.items
+
+    pages = pagination.pages  # 总页数
+    total = pagination.total  # 总记录数
+
+    return jsonify({"code": 1, "page": page, "pages": pages, "total": total, "message": [entity.to_json() for entity in entities]})
 # @api.route("/api/v1.0/ht_update/<int:ty_id>", methods=["PUT"])
 # def update_housetype(ty_id):
 #     if not ty_id:

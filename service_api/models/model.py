@@ -114,15 +114,17 @@ class HouseType(db.Model):
     ty_id = Column('ty_id', Integer, primary_key=True, autoincrement=True)
     ty_name = Column('ty_name', String(45), nullable=False)
     ty_valume =Column('ty_valume', Integer, default=0)
-
+    ty_createtime = Column('ty_createtime', DateTime, default=datetime.datetime.now)
+    ty_modifytime = Column('ty_modifytime', DateTime, default=datetime.datetime.now)
 
     def to_json(self):
-        house_type = {
+        return {
             'ty_id': self.ty_id,
             'ty_name': self.ty_name,
-            'ty_valume': self.ty_valume
+            'ty_valume': self.ty_valume,
+            'ty_createtime':self.ty_createtime.strftime('%Y-%m-%d %H:%M:%S'),
+            'ty_modifytime':self.ty_modifytime.strftime('%Y-%m-%d %H:%M:%S')
         }
-        return house_type
 
 # 房源表
 class HouseResources(db.Model):
