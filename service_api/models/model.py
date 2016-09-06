@@ -159,9 +159,36 @@ class HouseResources(db.Model):
             'hs_hitvalume':self.hs_hitvalume,
             'hs_images': self.hs_images,
             'hs_status':self.hs_status,
-            'hs_intro':self.hs_intro
+            'hs_intro':self.hs_intro,
+            'hs_createtime': self.hs_createtime.strftime('%Y-%m-%d %H:%M:%S'),
+            'hs_modifytime': self.hs_modifytime.strftime('%Y-%m-%d %H:%M:%S')
         }
 
+# 房源扩展类,用于联合查询显示
+class HouseResources_Ext(HouseResources):
+
+    ho_name = Column('ho_name', String(45))  # 真实姓名
+    ty_name = Column('ty_name', String(45))  # 类型名称
+
+    def to_json(self):
+        return {
+            'hs_id': self.hs_id,
+            'ty_id': self.ty_id,
+            'user_id': self.user_id,
+            'hs_name': self.hs_name,
+            'hs_province': self.hs_province,
+            'hs_city': self.hs_city,
+            'hs_country': self.hs_country,
+            'hs_address': self.hs_address,
+            'hs_hitvalume': self.hs_hitvalume,
+            'hs_images': self.hs_images,
+            'hs_status': self.hs_status,
+            'hs_intro': self.hs_intro,
+            'hs_createtime': self.hs_createtime.strftime('%Y-%m-%d %H:%M:%S'),
+            'hs_modifytime': self.hs_modifytime.strftime('%Y-%m-%d %H:%M:%S'),
+            'ho_name':self.ho_name,
+            'ty_name':self.ty_name
+        }
 # 客房类型表
 # class RoomType(db.Model):
 #
