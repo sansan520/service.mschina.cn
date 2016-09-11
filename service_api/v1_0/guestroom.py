@@ -2,7 +2,7 @@
 
 from functools import wraps
 from flask import jsonify, request, g, current_app
-from service_api.models.model import GuestRoom, db_session
+from service_api.models.model import db,GuestRoom, db_session
 from . import api
 from sqlalchemy import exc
 
@@ -141,17 +141,24 @@ def get_guestroom_by_hsId(hs_id):
 #
 #     return jsonify({"code": 1, "message": [guestroom.to_json() for guestroom in room_lists]})
 
-# 查询所有客房列表,返回JSON
-@api.route("/api/v1.0/get_all_guestroom", methods=["GET"])
-def get_all_guestroom():
 
+@api.route("/api/v1.0/get_all_rooms_by_hs_id/<int:hs_id>/<int:page>")
+def get_all_rooms_by_hs_id(hs_id,page):
+    if not hs_id:
+        return jsonify({"code": 0, "message": "参数错误"})
+    pagesize = 10
     try:
-        guestroom_all = db_session.query(GuestRoom).all()
-        return jsonify({"code": 1, "message": [guestroom.to_json() for guestroom in guestroom_all]})
-
+        pagination = GuestRoom.query.filter(GuestRoom.hs_id==hs_id).order_by(GuestRoom.gr_id.desc()).\
+            paginate(page, per_page=pagesize,error_out=False)
+        pages = pagination.pages  # 总页数
+        total = pagination.total  # 总记录数
+        entities = pagination.items
+        return jsonify({"code": 1, "page": page, "pages": pages, "total": total,
+                        "message": [entity.to_json() for entity in entities]})
     except:
-        return jsonify({"code":0,"message":"暂无数据"})
-    return jsonify({"code":0,"message":"查询异常"})
+        return jsonify({"code": 0, "message": "查询失败"})
+
+
 #根据客房名称搜索
 @api.route("/api/v1.0/findbygrname/<string:gr_name>", methods=['GET'])
 def findbygrname(gr_name):

@@ -191,7 +191,6 @@ def get_res_page(page=1):
 def get_all_houses(page=1):
     pagesize = 10
     try:
-        #pagination = HouseResources.query.order_by(HouseResources.hs_id.desc()).paginate(page, per_page=pagesize, error_out=False)
         querylist = HouseResources.query.join(HouseType, HouseResources.user_id == HouseType.ty_id). \
             join(HouseOwner, HouseResources.user_id == HouseOwner.user_id). \
             add_columns(HouseResources.hs_id, HouseResources.ty_id, HouseResources.hs_intro, HouseResources.hs_province,
@@ -203,9 +202,10 @@ def get_all_houses(page=1):
 
         pagination = querylist.paginate(page, per_page=pagesize,error_out=False)
         newEntities = []
-        newItem = HouseResources_Ext()
+
         entities = pagination.items
         for entity in entities:
+            newItem = HouseResources_Ext()
             newItem.hs_id = entity.hs_id
             newItem.ty_name = entity.ty_name
             newItem.ho_name = entity.ho_name
@@ -222,6 +222,7 @@ def get_all_houses(page=1):
             newItem.hs_name = entity.hs_name
             newItem.hs_status = entity.hs_status
             newEntities.append(newItem)
+
         pages = pagination.pages  # 总页数
         total = pagination.total  # 总记录数
 

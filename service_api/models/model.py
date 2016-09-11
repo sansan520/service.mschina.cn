@@ -189,13 +189,6 @@ class HouseResources_Ext(HouseResources):
             'ho_name':self.ho_name,
             'ty_name':self.ty_name
         }
-# 客房类型表
-# class RoomType(db.Model):
-#
-#     __tablename__ = "roomtype"
-#
-#     rt_id = Column('rt_id', Integer, primary_key=True)
-#     rt_name = Column('rt_name', String(50), nullable=False)
 
 
 # 客房表
@@ -211,7 +204,7 @@ class GuestRoom(db.Model):
     gr_price = Column('gr_price', DECIMAL(10, 2))
     gr_desc = Column('gr_desc', String(500))   # 简单描述
     gr_images = Column('gr_images', String(500))
-    gr_status = Column('gr_status', Integer)    #admin:0表示审核中,1 正常(审核通过),2 房东停止发布
+    gr_status = Column('gr_status', Integer, default=0)    #admin:0表示审核中,1 正常(审核通过),2 房东停止发布
     gr_createtime = Column('gr_createtime',DateTime,default=datetime.datetime.now())
     gr_modifytime = Column('gr_modifytiem',DateTime,default=datetime.datetime.now())
 
@@ -232,6 +225,7 @@ class GuestRoom(db.Model):
             'gr_name':self.gr_name,
             'gr_price': float(self.gr_price),
             'gr_modifytime':self.gr_modifytime.strftime('%Y-%m-%d %H:%M:%S'),
+            'gr_createtime':self.gr_createtime.strftime('%Y-%m-%d %H:%M:%S'),
             'gr_desc': self.gr_desc,
             'gr_images':self.gr_images,
             'gr_room_type':self.gr_room_type,
