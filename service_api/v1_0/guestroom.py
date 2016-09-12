@@ -65,6 +65,11 @@ def update_guestroom(gr_id):
     gr_windows =request.get_json().get("gr_windows")
     gr_breakfast = request.get_json().get("gr_breakfast")
     gr_settings = request.get_json().get("gr_settings")
+    gr_room_type = request.get_json().get("gr_room_type")
+    gr_room_area = request.get_json().get("gr_room_area")
+    gr_bed_type = request.get_json().get("gr_bed_type")
+    gr_bed_count = request.get_json().get("gr_bed_count")
+
     try:
         db_session.query(GuestRoom).filter(GuestRoom.gr_id == gr_id).update({
             "hs_id": hs_id,
@@ -158,6 +163,8 @@ def get_all_rooms_by_hs_id(hs_id,page):
     except:
         return jsonify({"code": 0, "message": "查询失败"})
 
+#查询该房源下的所有客房的个数
+#@api.route("api/v1.0/get_count_by_hs_id",methods=['GET'])
 
 #根据客房名称搜索
 @api.route("/api/v1.0/findbygrname/<string:gr_name>", methods=['GET'])

@@ -5,6 +5,7 @@ from flask import jsonify, request, g, current_app
 from service_api.models.model import Reserve, db_session
 from . import api
 from sqlalchemy import exc
+from datetime import datetime
 
 # 预订客房
 @api.route("/api/v1.0/insert_reserve", methods=["POST"])
@@ -46,7 +47,7 @@ def update_reserve(id):
             "start_time": start_time,
             "end_time": end_time,
             "status": status,
-            "modify_time":datetime.now()
+            "modify_time":datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         })
 
         db_session.commit()
@@ -63,7 +64,7 @@ def del_reserve(id):
     try:
         db_session.query(Reserve).filter(Reserve.id == id).update({
             "status": 0,
-            "modify_time": datetime.now()
+            "modify_time": datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         })
 
         db_session.commit()
