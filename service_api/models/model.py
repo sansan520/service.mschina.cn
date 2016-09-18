@@ -228,6 +228,7 @@ class GuestRoom(db.Model):
             'gr_createtime':self.gr_createtime.strftime('%Y-%m-%d %H:%M:%S'),
             'gr_desc': self.gr_desc,
             'gr_images':self.gr_images,
+            'gr_status':self.gr_status,
             'gr_room_type':self.gr_room_type,
             'gr_room_area': self.gr_room_area,
             'gr_bed_type': self.gr_bed_type,

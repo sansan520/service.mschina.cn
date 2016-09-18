@@ -37,8 +37,8 @@ def insert_guestroom():
     guestroom.gr_settings = request.get_json().get("gr_settings")
 
     try:
-        db_session.add(guestroom)
-        db_session.commit()
+        db.session.add(guestroom)
+        db.session.commit()
         return jsonify({"code": 1, "message": "客房添加成功"})
     except exc.IntegrityError:
         db_session.rollback()
@@ -71,7 +71,7 @@ def update_guestroom(gr_id):
     gr_bed_count = request.get_json().get("gr_bed_count")
 
     try:
-        db_session.query(GuestRoom).filter(GuestRoom.gr_id == gr_id).update({
+        db.session.query(GuestRoom).filter(GuestRoom.gr_id == gr_id).update({
             "hs_id": hs_id,
             "gr_price": gr_price,
             "gr_desc": gr_desc,
@@ -87,10 +87,10 @@ def update_guestroom(gr_id):
             "gr_settings":gr_settings
         })
 
-        db_session.commit()
+        db.session.commit()
         return jsonify({"code": 1, "message": "客房更新成功"})
     except exc.IntegrityError:
-        db_session.rollback()
+        db.session.rollback()
     return jsonify({"code": 0, "message": "客房更新失败"})
 
 '''
@@ -103,12 +103,12 @@ def delete_guestroom(gr_id):
         return jsonify({"code": 0, "message": "参数错误"})
     try:
 
-        db_session.query(GuestRoom).filter(GuestRoom.gr_id == gr_id).delete()
-        db_session.commit()
+        db.session.query(GuestRoom).filter(GuestRoom.gr_id == gr_id).delete()
+        db.session.commit()
         return jsonify({"code": 1, "message": "客房删除成功"})
 
     except exc.IntegrityError:
-        db_session.rollback()
+        db.session.rollback()
 
     return jsonify({"code": 0, "message": "客房删除失败"})
 
@@ -117,7 +117,7 @@ def delete_guestroom(gr_id):
 @api.route("/api/v1.0/get_guestroom_by_gr_id/<int:gr_id>",methods=['GET'])
 def get_guestroom_by_gr_id(gr_id):
     try:
-        entity = db_session.query(GuestRoom).filter(GuestRoom.gr_id == gr_id).first()
+        entity = db.session.query(GuestRoom).filter(GuestRoom.gr_id == gr_id).first()
         return jsonify({"code":1,"message":entity.to_json()})
     except:
         return jsonify({"code":0,"message":"查询失败"})
@@ -131,10 +131,26 @@ def get_guestroom_by_hsId(hs_id):
     if not hs_id:
         return jsonify({"code": 0, "message": "参数错误"})
 
-    room_lists = db_session.query(GuestRoom).filter(GuestRoom.hs_id == hs_id).all()
+    room_lists = db.session.query(GuestRoom).filter(GuestRoom.hs_id == hs_id).all()
 
     return jsonify({"code": 1, "message": [entity.to_json() for entity in room_lists]})
 
+@api.route("/api/v1.0/change_status_by_gr_id/<int:gr_id>", methods=["PUT"])
+def change_status_by_gr_id(gr_id):
+    if not gr_id:
+        return jsonify({"code": 0, "message": "参数错误hs_id"})
+    gr_status = request.get_json().get("gr_status")
+    if int(gr_status)>2:
+        return jsonify({"code": 0, "message": "gr_status"})
+    try:
+        db.session.query(GuestRoom).filter(GuestRoom.gr_id == gr_id).update({
+            "gr_status": gr_status
+        })
+        db.session.commit()
+        return jsonify({"code": 1, "message": "状态更新成功"})
+    except exc.IntegrityError:
+        db_session.rollback()
+        return jsonify({"code": 0, "message": "状态更新失败"})
 
 # 根据房间类型,查询所有客房列表,返回JSON
 # @api.route("/api/v1.0/get_guestroom_by_rtId/<int:rt_id>", methods=["GET"])
@@ -172,7 +188,7 @@ def findbygrname(gr_name):
     if not gr_name:
         return jsonify({"code": 0, "message": "客房不存在"})
     try:
-        entities = db_session.query(GuestRoom).filter_by(GuestRoom.gr_name.like('%'+gr_name+'%')).all()
+        entities = db.session.query(GuestRoom).filter_by(GuestRoom.gr_name.like('%'+gr_name+'%')).all()
         return jsonify({"code": 1, "message": [entity.to_json() for entity in entities]})
     except:
         return jsonify({"code":0,"message":"暂无数据"})
@@ -185,7 +201,7 @@ def findbygrprice(gr_price):
     if not gr_price:
         return jsonify({"code": 0, "message": "暂无数据"})
     try:
-        entities = db_session.query(GuestRoom).filter_by(GuestRoom.gr_price <= gr_price).all()
+        entities = db.session.query(GuestRoom).filter_by(GuestRoom.gr_price <= gr_price).all()
         return jsonify({"code": 1, "message": [entity.to_json() for entity in entities]})
     except:
         return jsonify({"code": 0, "message": "暂无数据"})

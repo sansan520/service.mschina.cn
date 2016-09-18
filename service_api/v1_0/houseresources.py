@@ -137,17 +137,17 @@ def modify_status_by_hs_id(hs_id):
     if not hs_id:
         return jsonify({"code": 0, "message": "参数错误hs_id"})
     hs_status = request.get_json().get("hs_status")
-    if not hs_status:
+    if int(hs_status)>1:
         return jsonify({"code": 0, "message": "参数错误hs_status"})
     try:
         db.session.query(HouseResources).filter(HouseResources.hs_id == hs_id).update({
             "hs_status": hs_status
         })
         db.session.commit()
-        return jsonify({"code": 1, "message": "删除成功"})
+        return jsonify({"code": 1, "message": "状态更新成功"})
     except exc.IntegrityError:
         db_session.rollback()
-        return jsonify({"code": 0, "message": "删除失败"})
+        return jsonify({"code": 0, "message": "状态更新失败"})
 
 #  为首页获取3条热门房源
 @api.route("/api/v1.0/get_hot_source4index")
