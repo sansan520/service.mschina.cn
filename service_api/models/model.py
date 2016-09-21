@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import datetime
 from sqlalchemy import create_engine, ForeignKey, Column, Integer, String, DateTime, \
-    DECIMAL
+    DECIMAL,Boolean
 from sqlalchemy.orm import sessionmaker, scoped_session
 import os,sys
 #parentdir  父目录
@@ -24,6 +24,16 @@ manager.add_command('db', MigrateCommand)
 
 engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'], pool_recycle=7200)
 db_session = scoped_session(sessionmaker(autocommit=False, autoflush=True, bind=engine))
+
+#角色表
+class Role(db.Model):
+    __tablename__ = 'role'
+
+    role_id = Column('role_id', Integer, primary_key=True, autoincrement=True)
+    role_name = Column('role_name', String(45), index=True, nullable=False)
+    default = Column('default',Boolean,default=False,nullable=False)
+    permissions = Column('permissions',Integer,nullable=False)
+    users = db.relationship('UserBase',backref='role',lazy='dynamic')
 
 # 会员基础表(游客/房东公共部分)
 class UserBase(db.Model):
